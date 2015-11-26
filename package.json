@@ -24,7 +24,8 @@
     "lodash": "^3.10.1",
     "mm-lodash": "^1.2.5",
     "ms-users-restify": "^0.4.0",
-    "restify-utils": "^0.1.12"
+    "restify-utils": "^0.1.12",
+    "common-errors": "latest"
   },
   "devDependencies": {
     "babel": "^5.8.34",

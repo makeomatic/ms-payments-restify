@@ -1,51 +1,46 @@
 const config = require('../config.js');
-const ld = require('lodash');
 const { getRoute, getTimeout } = config;
-const ROUTE_NAME = 'planCreate';
+const ROUTE_NAME = 'planState';
 
 /**
- * @api {post} / Creates new PayPal billing plan
+ * @api {patch} /state/:id/:state Changes billing plan state
  * @apiVersion 1.0.0
- * @apiName CreatePlan
+ * @apiName ChangePlanState
  * @apiGroup Plans
  * @apiPermission admin
  *
- * @apiDescription Returns new plan object.
+ * @apiDescription Returns nothing.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {Object} Plan, according to plan schema. Plan *must* include correct return and cancel urls.
+ * @apiParam (Params) {Object} Plan, according to plan schema.
  *
  * @apiExample {curl} Example usage:
- *   curl -i -X POST
+ *   curl -i -X PATCH
  *     -H 'Accept-Version: *'
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/plans"
- *     -d '{ <plan object> }'
+ *     "https://api-sandbox.cappacity.matic.ninja/api/plans/state/P-94458432VR012762KRWBZEUA/active"
  *
  * @apiUse UserAuthResponse
  * @apiUse ValidationError
  * @apiUse PaymentRequiredError
  * @apiUse PreconditionFailedError
  *
- * @apiSuccessExample {json} Success-Created:
- *  HTTP/1.1 201 Created
- *  Location: https://api.sandbox.paypal.com/v1/payments/billing-plans/P-94458432VR012762KRWBZEUA
- *  { <plan object> }
+ * @apiSuccessExample {json} Success-Updated:
+ *  HTTP/1.1 200 OK
  */
-exports.post = {
-  path: '/',
+exports.patch = {
+  path: '/:id/:state',
   middleware: ['auth', 'admin'],
   handlers: {
     '1.0.0': function createPlan(req, res, next) {
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), req.body, {timeout: getTimeout(ROUTE_NAME)})
+        .publishAndWait(getRoute(ROUTE_NAME), { id: req.params.id, state: req.params.state }, {timeout: getTimeout(ROUTE_NAME)})
         .then(plan => {
-          res.setHeader('Location', ld.findWhere(plan.links, {rel: 'self'}));
-          res.status(302).send(plan);
+          res.send(200);
         })
         .asCallback(next);
     },

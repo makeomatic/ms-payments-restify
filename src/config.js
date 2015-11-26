@@ -7,10 +7,16 @@ const users = require('ms-users-restify');
  */
 const config = module.exports = {
   users: {},
-  files: {
-    prefix: "payments",
+  payments: {
+    prefix: 'payments',
     postfix: {
-      "planCreate": "plan.create"
+      'planCreate': 'plan.create',
+      'planUpdate': 'plan.update',
+      'planList': 'plan.list',
+      'planDelete': 'plan.delete',
+      'planState': 'plan.state',
+      'agreementCreate': 'agreement.create',
+      'agreementExecute': 'agreement.execute',
     },
     timeouts: {},
   },

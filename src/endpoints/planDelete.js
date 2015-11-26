@@ -1,29 +1,28 @@
 const config = require('../config.js');
-const ld = require('lodash');
 const { getRoute, getTimeout } = config;
-const ROUTE_NAME = 'planCreate';
+const ROUTE_NAME = 'planDelete';
 
 /**
- * @api {post} / Creates new PayPal billing plan
+ * @api {delete} /:id Deletes PayPal billing plan
  * @apiVersion 1.0.0
- * @apiName CreatePlan
+ * @apiName deletePlan
  * @apiGroup Plans
  * @apiPermission admin
  *
- * @apiDescription Returns new plan object.
+ * @apiDescription Returns nothing.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {Object} Plan, according to plan schema. Plan *must* include correct return and cancel urls.
+ * @apiParam (Params) {Object} Plan, according to plan schema.
  *
  * @apiExample {curl} Example usage:
- *   curl -i -X POST
+ *   curl -i -X DELETE
  *     -H 'Accept-Version: *'
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/plans"
+ *     "https://api-sandbox.cappacity.matic.ninja/api/plans/P-94458432VR012762KRWBZEUA"
  *     -d '{ <plan object> }'
  *
  * @apiUse UserAuthResponse
@@ -31,21 +30,18 @@ const ROUTE_NAME = 'planCreate';
  * @apiUse PaymentRequiredError
  * @apiUse PreconditionFailedError
  *
- * @apiSuccessExample {json} Success-Created:
- *  HTTP/1.1 201 Created
- *  Location: https://api.sandbox.paypal.com/v1/payments/billing-plans/P-94458432VR012762KRWBZEUA
- *  { <plan object> }
+ * @apiSuccessExample {json} Success-Deleted:
+ *  HTTP/1.1 200 OK
  */
-exports.post = {
-  path: '/',
+exports.delete = {
+  path: '/:id',
   middleware: ['auth', 'admin'],
   handlers: {
     '1.0.0': function createPlan(req, res, next) {
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), req.body, {timeout: getTimeout(ROUTE_NAME)})
-        .then(plan => {
-          res.setHeader('Location', ld.findWhere(plan.links, {rel: 'self'}));
-          res.status(302).send(plan);
+        .publishAndWait(getRoute(ROUTE_NAME), req.params.id, {timeout: getTimeout(ROUTE_NAME)})
+        .then(() => {
+          res.send(200);
         })
         .asCallback(next);
     },

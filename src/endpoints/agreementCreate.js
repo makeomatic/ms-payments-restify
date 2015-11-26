@@ -1,30 +1,30 @@
 const config = require('../config.js');
-const ld = require('lodash');
 const { getRoute, getTimeout } = config;
-const ROUTE_NAME = 'planCreate';
+const ROUTE_NAME = 'agreementCreate';
 
 /**
- * @api {post} / Creates new PayPal billing plan
+ * @api {post} / Creates new PayPal billing agreement for user
  * @apiVersion 1.0.0
- * @apiName CreatePlan
- * @apiGroup Plans
- * @apiPermission admin
+ * @apiName CreateAgreement
+ * @apiGroup Agreements
+ * @apiPermission user
  *
- * @apiDescription Returns new plan object.
+ * @apiDescription Returns new agreement object and link to approve it by user in Location header.
+ * Link is also included in agreement.links[rel='approval_url'], user must open it in browser to approve agreement.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {Object} Plan, according to plan schema. Plan *must* include correct return and cancel urls.
+ * @apiParam (Params) {Object} Agreement Agerement object, according to agreement schema.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
  *     -H 'Accept-Version: *'
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/plans"
- *     -d '{ <plan object> }'
+ *     "https://api-sandbox.cappacity.matic.ninja/api/agreements"
+ *     -d '{ <agreement object> }'
  *
  * @apiUse UserAuthResponse
  * @apiUse ValidationError
@@ -33,19 +33,19 @@ const ROUTE_NAME = 'planCreate';
  *
  * @apiSuccessExample {json} Success-Created:
  *  HTTP/1.1 201 Created
- *  Location: https://api.sandbox.paypal.com/v1/payments/billing-plans/P-94458432VR012762KRWBZEUA
- *  { <plan object> }
+ *  https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=EC-0JP008296V451950C
+ *  { token: <token>, agreement: <agreement object>, url: <approval url> }
  */
 exports.post = {
   path: '/',
-  middleware: ['auth', 'admin'],
+  middleware: ['auth'],
   handlers: {
     '1.0.0': function createPlan(req, res, next) {
       return req.amqp
         .publishAndWait(getRoute(ROUTE_NAME), req.body, {timeout: getTimeout(ROUTE_NAME)})
-        .then(plan => {
-          res.setHeader('Location', ld.findWhere(plan.links, {rel: 'self'}));
-          res.status(302).send(plan);
+        .then(result => {
+          res.setHeader('Location', result.url);
+          res.status(302).send(result);
         })
         .asCallback(next);
     },
