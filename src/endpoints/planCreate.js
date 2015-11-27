@@ -10,13 +10,13 @@ const ROUTE_NAME = 'planCreate';
  * @apiGroup Plans
  * @apiPermission admin
  *
- * @apiDescription Returns new plan object.
+ * @apiDescription Returns new plan object. If hidden is true, hides plan from regular users, allowing it to be used by admins on special occasions.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {Object} Plan, according to plan schema. Plan *must* include correct return and cancel urls.
+ * @apiParam (Params) {Object} Plan must suffice to plan schema and include correct return and cancel urls.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
@@ -24,7 +24,7 @@ const ROUTE_NAME = 'planCreate';
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
  *     "https://api-sandbox.cappacity.matic.ninja/api/plans"
- *     -d '{ <plan object> }'
+ *     -d '{ "hidden": false, "alias": "mega-plan", "plan": <plan object> }'
  *
  * @apiUse UserAuthResponse
  * @apiUse ValidationError
