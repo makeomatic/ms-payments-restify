@@ -40,13 +40,13 @@ exports.reconfigure = function reconfigure(opts) {
  * returns timeout for a route
  */
 exports.getTimeout = function getTimeout(route) {
-  return config.files.timeouts[route] || 5000;
+  return config.payments.timeouts[route] || 5000;
 };
 
 /**
  * Returns text route
  */
 exports.getRoute = function getRoute(route) {
-  const files = config.files;
-  return [files.prefix, files.postfix[route]].join('.');
+  const payments = config.payments;
+  return [payments.prefix, payments.postfix[route]].join('.');
 };
