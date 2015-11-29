@@ -1,4 +1,4 @@
-const ROUTE_NAME = 'planList';
+const ROUTE_NAME = 'agreementList';
 const { createRequest, createResponse } = require('../listUtils');
 
 /**

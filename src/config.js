@@ -17,6 +17,7 @@ const config = module.exports = {
       'planState': 'plan.state',
       'agreementCreate': 'agreement.create',
       'agreementExecute': 'agreement.execute',
+      'agreementList': 'agreement.list',
     },
     timeouts: {},
   },
