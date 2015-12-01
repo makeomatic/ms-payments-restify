@@ -4,7 +4,7 @@ const config = require('./config.js');
 const users = require('ms-users-restify');
 
 // generate attach function
-const attach = module.exports = utils.attach(
+const attach = module.exports = exports = utils.attach(
   config,
   path.resolve(__dirname, './endpoints'),
   path.resolve(__dirname, './middleware')
