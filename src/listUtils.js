@@ -4,7 +4,7 @@ ld.mixin(require('mm-lodash'));
 const Errors = require('common-errors');
 const validator = require('./validator.js');
 
-const config = require('../config.js');
+const config = require('./config.js');
 const { getRoute, getTimeout } = config;
 
 const { stringify: qs } = require('querystring');
