@@ -1,6 +1,6 @@
 {
   "name": "ms-payments-restify",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "HTTP adapter for ms-payments",
   "main": "./lib/index.js",
   "scripts": {
@@ -19,13 +19,13 @@
   },
   "homepage": "https://github.com/makeomatic/ms-payments-restify#readme",
   "dependencies": {
+    "common-errors": "latest",
     "debug": "^2.2.0",
     "glob": "^6.0.1",
     "lodash": "^3.10.1",
     "mm-lodash": "^1.2.5",
-    "ms-users-restify": "^0.4.0",
-    "restify-utils": "^0.1.12",
-    "common-errors": "latest"
+    "ms-users-restify": "^0.5.11",
+    "restify-utils": "^0.1.12"
   },
   "devDependencies": {
     "babel": "^5.8.34",
