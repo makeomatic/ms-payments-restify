@@ -33,7 +33,7 @@ const ROUTE_NAME = 'planDelete';
  * @apiSuccessExample {json} Success-Deleted:
  *  HTTP/1.1 200 OK
  */
-exports.delete = {
+exports.del = {
   path: '/:id',
   middleware: ['auth', 'admin'],
   handlers: {
