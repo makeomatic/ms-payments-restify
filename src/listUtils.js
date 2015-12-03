@@ -63,7 +63,7 @@ function createResponse(res) {
       res.links.next = `${base}?${qs(nextQS)}`;
     }
 
-    return Promise.resolve(answer.plans);
+    return Promise.resolve(answer.items);
   };
 }
 
