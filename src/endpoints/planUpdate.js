@@ -4,7 +4,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planUpdate';
 
 /**
- * @api {patch} /:id Updates billing plan
+ * @api {patch} /plans/:id Updates billing plan
  * @apiVersion 1.0.0
  * @apiName UpdatePlan
  * @apiGroup Plans
@@ -36,7 +36,7 @@ const ROUTE_NAME = 'planUpdate';
  *  { <plan object> }
  */
 exports.patch = {
-  path: '/:id',
+  path: '/plans/:id',
   middleware: ['auth'],
   handlers: {
     '1.0.0': function createPlan(req, res, next) {

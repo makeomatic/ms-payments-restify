@@ -3,7 +3,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementState';
 
 /**
- * @api {post} /:id/state/:state Changes state of PayPal billing agreement
+ * @api {post} /agreements/:id/state/:state Changes state of PayPal billing agreement
  * @apiVersion 1.0.0
  * @apiName AgreementChangeState
  * @apiGroup Agreements
@@ -33,7 +33,7 @@ const ROUTE_NAME = 'agreementState';
  *   HTTP/1.1 204 No Content
  */
 exports.post = {
-  path: '/:id/state/:state',
+  path: '/agreements/:id/state/:state',
   middleware: ['auth'],
   handlers: {
     '1.0.0': function agreementState(req, res, next) {

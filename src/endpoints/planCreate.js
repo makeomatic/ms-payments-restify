@@ -4,7 +4,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planCreate';
 
 /**
- * @api {post} / Creates new PayPal billing plan
+ * @api {post} /plans Creates new PayPal billing plan
  * @apiVersion 1.0.0
  * @apiName CreatePlan
  * @apiGroup Plans
@@ -37,7 +37,7 @@ const ROUTE_NAME = 'planCreate';
  *  { <plan object> }
  */
 exports.post = {
-  path: '/',
+  path: '/plans',
   middleware: ['auth', 'admin'],
   handlers: {
     '1.0.0': function createPlan(req, res, next) {

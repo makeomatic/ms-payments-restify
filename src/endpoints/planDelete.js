@@ -3,7 +3,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planDelete';
 
 /**
- * @api {delete} /:id Deletes PayPal billing plan
+ * @api {delete} /plans/:id Deletes PayPal billing plan
  * @apiVersion 1.0.0
  * @apiName deletePlan
  * @apiGroup Plans
@@ -34,7 +34,7 @@ const ROUTE_NAME = 'planDelete';
  *  HTTP/1.1 200 OK
  */
 exports.del = {
-  path: '/:id',
+  path: '/plans/:id',
   middleware: ['auth', 'admin'],
   handlers: {
     '1.0.0': function createPlan(req, res, next) {

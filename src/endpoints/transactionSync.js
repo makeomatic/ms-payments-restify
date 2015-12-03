@@ -3,7 +3,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'transactionSync';
 
 /**
- * @api {post} / Sync transactions for agreement from PayPal
+ * @api {post} /transactions/sync Sync transactions for agreement from PayPal
  * @apiVersion 1.0.0
  * @apiName SyncTransactions
  * @apiGroup Transactions
@@ -33,7 +33,7 @@ const ROUTE_NAME = 'transactionSync';
  *  HTTP/1.1 200 OK
  */
 exports.post = {
-  path: '/sync',
+  path: '/transactions/sync',
   middleware: ['auth', 'admin'],
   handlers: {
     '1.0.0': function createPlan(req, res, next) {

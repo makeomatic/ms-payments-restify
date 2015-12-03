@@ -2,7 +2,7 @@ const ROUTE_NAME = 'planList';
 const { createRequest, createResponse } = require('../listUtils');
 
 /**
- * @api {get} / List available billing plans
+ * @api {get} /plans List available billing plans
  * @apiVersion 1.0.0
  * @apiName ListPlans
  * @apiGroup Plans
@@ -33,7 +33,7 @@ const { createRequest, createResponse } = require('../listUtils');
  *   [{ <plan object> }]
  */
 exports.get = {
-  path: '/',
+  path: '/plans',
   middleware: ['auth'],
   handlers: {
     '1.0.0': function createPlan(req, res, next) {

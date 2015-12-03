@@ -3,7 +3,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementExecute';
 
 /**
- * @api {post} /execute/:token Executes new PayPal billing agreement
+ * @api {post} /agreements/:token/execute Executes new PayPal billing agreement
  * @apiVersion 1.0.0
  * @apiName ExecuteAgreement
  * @apiGroup Agreements
@@ -33,7 +33,7 @@ const ROUTE_NAME = 'agreementExecute';
  *   HTTP/1.1 204 No Content
  */
 exports.post = {
-  path: '/execute/:token',
+  path: '/agreements/:token/execute',
   middleware: ['auth'],
   handlers: {
     '1.0.0': function createPlan(req, res, next) {

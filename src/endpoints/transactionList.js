@@ -2,7 +2,7 @@ const ROUTE_NAME = 'transactionList';
 const { createRequest, createResponse } = require('../listUtils');
 
 /**
- * @api {get} / List transactions
+ * @api {get} /transactions List transactions
  * @apiVersion 1.0.0
  * @apiName ListTransactions
  * @apiGroup Transactions
@@ -33,7 +33,7 @@ const { createRequest, createResponse } = require('../listUtils');
  *   [{ <transaction object> }]
  */
 exports.get = {
-  path: '/',
+  path: '/transactions',
   middleware: ['auth'],
   handlers: {
     '1.0.0': function createPlan(req, res, next) {
