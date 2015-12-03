@@ -1,3 +1,5 @@
+const Promise = require('bluebird');
+
 const ld = require('lodash').runInContext();
 ld.mixin(require('mm-lodash'));
 
