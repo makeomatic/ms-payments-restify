@@ -2,11 +2,11 @@ const ROUTE_NAME = 'planList';
 const { createRequest, createResponse } = require('../listUtils');
 
 /**
- * @api {get} /plans List available billing plans
+ * @api {get} /plans List plans
  * @apiVersion 1.0.0
  * @apiName ListPlans
  * @apiGroup Plans
- * @apiPermission user, admin
+ * @apiPermission UserPermission
  *
  * @apiDescription Returns array of plan objects.
  *
@@ -14,7 +14,9 @@ const { createRequest, createResponse } = require('../listUtils');
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {Object} Plan list query, according to query schema.
+ * @apiParam (Params) {Object} query list query, according to query schema.
+ *
+ * @apiSuccess (200) {Object[]} plans List of available plans, depending on user permission level.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X GET
@@ -23,10 +25,8 @@ const { createRequest, createResponse } = require('../listUtils');
  *     -H "Authorization: JWT therealtokenhere" \
  *     "https://api-sandbox.cappacity.matic.ninja/api/plans"
  *
- * @apiUse UserAuthResponse
  * @apiUse ValidationError
- * @apiUse PaymentRequiredError
- * @apiUse PreconditionFailedError
+ * @apiUse UnauthorizedError
  *
  * @apiSuccessExample {json} Success:
  *   HTTP/1.1 200 OK

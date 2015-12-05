@@ -1,22 +1,24 @@
 const config = require('../config.js');
-const ld = require('lodash');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planUpdate';
 
 /**
- * @api {patch} /plans/:id Updates billing plan
+ * @api {patch} /plans/:id Update plan
  * @apiVersion 1.0.0
  * @apiName UpdatePlan
  * @apiGroup Plans
- * @apiPermission admin
+ * @apiPermission AdminPermission
  *
- * @apiDescription Returns the updated plan object.
+ * @apiDescription Updates plan definition.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {Object} Plan Plan, according to plan schema.
+ * @apiParam (Params) {string} id Plan id.
+ * @apiParam (Params) {object} plan Any updates to plan schema.
+ *
+ * @apiSuccess (200) {Object} plan Updated plan.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X PATCH
@@ -26,10 +28,9 @@ const ROUTE_NAME = 'planUpdate';
  *     "https://api-sandbox.cappacity.matic.ninja/api/plans/:id"
  *     -d '{ "op": "replace", "path": "/", "value": { "type": "fixed" } }'
  *
- * @apiUse UserAuthResponse
  * @apiUse ValidationError
- * @apiUse PaymentRequiredError
- * @apiUse PreconditionFailedError
+ * @apiUse UnauthorizedError
+ * @apiUse ForbiddenResponse
  *
  * @apiSuccessExample {json} Success-Updated:
  *  HTTP/1.1 200 OK

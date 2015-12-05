@@ -3,19 +3,22 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'transactionSync';
 
 /**
- * @api {post} /transactions/sync Sync transactions for agreement from PayPal
+ * @api {post} /transactions/sync Sync transactions
  * @apiVersion 1.0.0
  * @apiName SyncTransactions
  * @apiGroup Transactions
- * @apiPermission admin
+ * @apiPermission UserPermission
  *
- * @apiDescription
+ * @apiDescription Synchronizes transactions for a single agreement with PayPal.
+ * Should be used to determine when to reset monthly limits primarily.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {Object} Plan must suffice to plan schema and include correct return and cancel urls.
+ * @apiParam (Params) {string} id Agreement id to sync transactions.
+ * @apiParam (Params) {string} start Date to start sync from.
+ * @apiParam (Params) {string} end Date to end sync on.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
@@ -26,8 +29,7 @@ const ROUTE_NAME = 'transactionSync';
  *
  * @apiUse UserAuthResponse
  * @apiUse ValidationError
- * @apiUse PaymentRequiredError
- * @apiUse PreconditionFailedError
+ * @apiUse ForbiddenResponse
  *
  * @apiSuccessExample {json} Success-Created:
  *  HTTP/1.1 200 OK

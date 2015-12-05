@@ -3,19 +3,19 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementExecute';
 
 /**
- * @api {post} /agreements/:token/execute Executes new PayPal billing agreement
+ * @api {post} /agreements/:token/execute Execute agreement
  * @apiVersion 1.0.0
  * @apiName ExecuteAgreement
  * @apiGroup Agreements
- * @apiPermission user
+ * @apiPermission UserPermission
  *
- * @apiDescription Returns nothing.
+ * @apiDescription Executes billing agreement. Agreement must be created via create method first.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {Object} Plan, according to plan schema.
+ * @apiParam (Params) {string} token Token, returned from create/list method.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
@@ -24,10 +24,8 @@ const ROUTE_NAME = 'agreementExecute';
  *     -H "Authorization: JWT therealtokenhere" \
  *     "https://api-sandbox.cappacity.matic.ninja/api/agreements/execute/EC-0JP008296V451950C"
  *
- * @apiUse UserAuthResponse
  * @apiUse ValidationError
- * @apiUse PaymentRequiredError
- * @apiUse PreconditionFailedError
+ * @apiUse UnauthorizedError
  *
  * @apiSuccessExample {json} Success-Executed:
  *   HTTP/1.1 204 No Content

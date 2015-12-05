@@ -3,19 +3,19 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planDelete';
 
 /**
- * @api {delete} /plans/:id Deletes PayPal billing plan
+ * @api {delete} /plans/:id Delete plan
  * @apiVersion 1.0.0
  * @apiName deletePlan
  * @apiGroup Plans
- * @apiPermission admin
+ * @apiPermission AdminPermission
  *
- * @apiDescription Returns nothing.
+ * @apiDescription Deletes billing plan by id.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {Object} Plan, according to plan schema.
+ * @apiParam (Params) {string} id Plan id from list or create method.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X DELETE
@@ -23,12 +23,10 @@ const ROUTE_NAME = 'planDelete';
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
  *     "https://api-sandbox.cappacity.matic.ninja/api/plans/P-94458432VR012762KRWBZEUA"
- *     -d '{ <plan object> }'
  *
- * @apiUse UserAuthResponse
  * @apiUse ValidationError
- * @apiUse PaymentRequiredError
- * @apiUse PreconditionFailedError
+ * @apiUse UnauthorizedError
+ * @apiUse ForbiddenResponse
  *
  * @apiSuccessExample {json} Success-Deleted:
  *  HTTP/1.1 200 OK

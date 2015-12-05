@@ -3,20 +3,21 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementCreate';
 
 /**
- * @api {post} /agreements Creates new PayPal billing agreement for user
+ * @api {post} /agreements Create new agreement
  * @apiVersion 1.0.0
  * @apiName CreateAgreement
  * @apiGroup Agreements
- * @apiPermission user
+ * @apiPermission UserPermission
  *
- * @apiDescription Returns new agreement object and link to approve it by user in Location header.
+ * @apiDescription
+ * Returns new agreement object and link to approve it by user in Location header.
  * Link is also included in agreement.links[rel='approval_url'], user must open it in browser to approve agreement.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {Object} Agreement Agerement object, according to agreement schema.
+ * @apiParam (Params) {Object} Agreement Agreement object according to agreement schema.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
@@ -26,14 +27,12 @@ const ROUTE_NAME = 'agreementCreate';
  *     "https://api-sandbox.cappacity.matic.ninja/api/agreements"
  *     -d '{ <agreement object> }'
  *
- * @apiUse UserAuthResponse
  * @apiUse ValidationError
- * @apiUse PaymentRequiredError
- * @apiUse PreconditionFailedError
+ * @apiUse UnauthorizedError
  *
  * @apiSuccessExample {json} Success-Created:
  *  HTTP/1.1 201 Created
- *  https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=EC-0JP008296V451950C
+ *  Location: https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=EC-0JP008296V451950C
  *  { token: <token>, agreement: <agreement object>, url: <approval url> }
  */
 exports.post = {

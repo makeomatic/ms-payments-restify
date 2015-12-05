@@ -3,19 +3,23 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementState';
 
 /**
- * @api {post} /agreements/:id/state/:state Changes state of PayPal billing agreement
+ * @api {post} /agreements/:id/state/:state Change state
  * @apiVersion 1.0.0
  * @apiName AgreementChangeState
  * @apiGroup Agreements
- * @apiPermission user
+ * @apiPermission UserPermission
  *
- * @apiDescription Returns nothing.
+ * @apiDescription
+ * Suspend temporarily disables agreement,
+ * reactivate enables suspended agreement,
+ * cancel allows to cancel agreement completely.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {Object} Plan, according to plan schema.
+ * @apiParam (Params) {string} id Plan id.
+ * @apiParam (Params) {string} state One of these states: suspend, reactivate, cancel.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
@@ -24,10 +28,8 @@ const ROUTE_NAME = 'agreementState';
  *     -H "Authorization: JWT therealtokenhere" \
  *     "https://api-sandbox.cappacity.matic.ninja/api/agreements/EC-0JP008296V451950C/state/suspended"
  *
- * @apiUse UserAuthResponse
  * @apiUse ValidationError
- * @apiUse PaymentRequiredError
- * @apiUse PreconditionFailedError
+ * @apiUse UnauthorizedError
  *
  * @apiSuccessExample {json} Success-Executed:
  *   HTTP/1.1 204 No Content

@@ -4,19 +4,25 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planCreate';
 
 /**
- * @api {post} /plans Creates new PayPal billing plan
+ * @api {post} /plans Create plan
  * @apiVersion 1.0.0
  * @apiName CreatePlan
  * @apiGroup Plans
- * @apiPermission admin
+ * @apiPermission AdminPermission
  *
- * @apiDescription Returns new plan object. If hidden is true, hides plan from regular users, allowing it to be used by admins on special occasions.
+ * @apiDescription
+ * Returns new plan object.
+ * If hidden is true, hides plan from regular users, allowing it to be used by admins on special occasions.
+ *
+ * @apiSuccess (201) {object} plan Plan object as returned from PayPal with additional fields like id.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {Object} Plan must suffice to plan schema and include correct return and cancel urls.
+ * @apiParam (Params) {boolean} hidden Hides plan from users.
+ * @apiParam (Params) {string} alias Readable name for plan, mostly for admin usage.
+ * @apiParam (Params) {object} plan Plan object, according to schema.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
@@ -26,10 +32,9 @@ const ROUTE_NAME = 'planCreate';
  *     "https://api-sandbox.cappacity.matic.ninja/api/plans"
  *     -d '{ "hidden": false, "alias": "mega-plan", "plan": <plan object> }'
  *
- * @apiUse UserAuthResponse
  * @apiUse ValidationError
- * @apiUse PaymentRequiredError
- * @apiUse PreconditionFailedError
+ * @apiUse UnauthorizedError
+ * @apiUse ForbiddenResponse
  *
  * @apiSuccessExample {json} Success-Created:
  *  HTTP/1.1 201 Created

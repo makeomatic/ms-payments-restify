@@ -6,15 +6,15 @@ const { createRequest, createResponse } = require('../listUtils');
  * @apiVersion 1.0.0
  * @apiName ListTransactions
  * @apiGroup Transactions
- * @apiPermission user, admin
+ * @apiPermission UserPermission
  *
- * @apiDescription Returns array of plan objects.
+ * @apiDescription Allows user to see their transactions or admin to see all transactions in system.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {Object} Plan list query, according to query schema.
+ * @apiParam (Params) {Object} query Query to list transactions.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X GET
@@ -25,8 +25,6 @@ const { createRequest, createResponse } = require('../listUtils');
  *
  * @apiUse UserAuthResponse
  * @apiUse ValidationError
- * @apiUse PaymentRequiredError
- * @apiUse PreconditionFailedError
  *
  * @apiSuccessExample {json} Success:
  *   HTTP/1.1 200 OK
