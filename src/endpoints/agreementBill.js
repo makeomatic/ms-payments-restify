@@ -6,7 +6,7 @@ const ROUTE_NAME = 'agreementBill';
  * @api {post} /agreements/:id/bill Bill agreement
  * @apiVersion 1.0.0
  * @apiName SyncAgreements
- * @apiGroup Transactions
+ * @apiGroup Agreements
  * @apiPermission NonePermission
  *
  * @apiDescription
@@ -42,8 +42,8 @@ exports.post = {
     '1.0.0': function createPlan(req, res, next) {
       return req.amqp
         .publishAndWait(getRoute(ROUTE_NAME), req.params.id, {timeout: getTimeout(ROUTE_NAME)})
-        .then(() => {
-          res.send(200);
+        .then((response) => {
+          res.status(200).send(response);
         })
         .asCallback(next);
     },
