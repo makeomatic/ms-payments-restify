@@ -14,12 +14,15 @@ const { stringify: qs } = require('querystring');
 function createRequest(req, ROUTE_NAME) {
   return Promise.try(function verifyRights() {
     const { order, filter, offset, limit, sortBy } = req.query;
-    const parsedFilter = filter && JSON.parse(decodeURIComponent(filter)) || undefined;
+    const parsedFilter = filter && JSON.parse(decodeURIComponent(filter)) || {};
+    if (!req.user.isAdmin()) {
+      parsedFilter.owner = req.user.id;
+    }
     return ld.compactObject({
       order: (order || 'DESC').toUpperCase(),
       offset: offset && +offset || undefined,
       limit: limit && +limit || 10,
-      filter: parsedFilter || {},
+      filter: parsedFilter,
       criteria: sortBy && decodeURIComponent(sortBy) || undefined,
     });
   })

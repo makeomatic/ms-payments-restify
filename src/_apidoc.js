@@ -9,6 +9,11 @@
  */
 
 /**
+ * @apiDefine NonePermission None
+ * This method can be called by anyone (intended for cron use).
+ */
+
+/**
  * @apiDefine 201 Response: Created
  * Object has been successfully created.
  */
