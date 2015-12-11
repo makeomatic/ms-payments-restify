@@ -15,6 +15,7 @@ const config = module.exports = {
       'planList': 'plan.list',
       'planDelete': 'plan.delete',
       'planState': 'plan.state',
+      'planGet': 'plan.get',
       'agreementCreate': 'agreement.create',
       'agreementExecute': 'agreement.execute',
       'agreementList': 'agreement.list',
