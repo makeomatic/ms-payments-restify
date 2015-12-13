@@ -2,10 +2,10 @@ const ROUTE_NAME = 'saleList';
 const { createRequest, createResponse } = require('../listUtils');
 
 /**
- * @api {get} /plans List plans
+ * @api {get} /plans List sales
  * @apiVersion 1.0.0
- * @apiName ListPlans
- * @apiGroup Plans
+ * @apiName ListSales
+ * @apiGroup Sales
  * @apiPermission UserPermission
  *
  * @apiDescription Returns array of sale objects.
