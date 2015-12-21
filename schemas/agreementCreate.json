@@ -1,0 +1,26 @@
+{
+  "id": "agreement.create",
+  "type": "object",
+  "properties": {
+    "data": {
+      "allOf": [
+        { "$ref": "common#/definitions/singleData" },
+        {
+          "type": "object",
+          "properties": {
+            "attributes": {
+              "type": "object",
+              "required": ["name", "plan"],
+              "properties": {
+                "name": { "$ref": "common#/definitions/stringProperty" },
+                "description": { "$ref": "common#/definitions/stringProperty" },
+                "start_date": { "$ref": "common#/definitions/stringProperty", "format": "date-time" },
+                "plan": { "$ref": "common#/definitions/stringProperty" }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

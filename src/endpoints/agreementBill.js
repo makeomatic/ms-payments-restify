@@ -1,3 +1,4 @@
+const Errors = require('common-errors');
 const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementBill';
@@ -21,6 +22,8 @@ const ROUTE_NAME = 'agreementBill';
  *
  * @apiParam (Params) {string} id Agreement id to check.
  *
+ * @apiSuccess (Return) {boolean} updated True if agreement was billed and models were applied to user.
+ *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
  *     -H 'Accept-Version: *'
@@ -34,15 +37,28 @@ const ROUTE_NAME = 'agreementBill';
  *
  * @apiSuccessExample {json} Success-Created:
  *  HTTP/1.1 200 OK
- *  { plan: <plan object>, agreement: <agreement object>, subscriptions: [<sub object>], shouldUpdate: boolean }
+ *  { data: { type: 'status', attributes: { 'updated': true } } }
  */
 exports.post = {
   path: '/agreements/:id/bill',
   handlers: {
-    '1.0.0': function createPlan(req, res, next) {
+    '1.0.0': (req, res, next) => {
+      const { id } = req.params;
+
+      if (id === null || id === undefined) {
+        return next(new Errors.ArgumentNullError('id'));
+      }
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), req.params.id, {timeout: getTimeout(ROUTE_NAME)})
-        .then((response) => {
+        .publishAndWait(getRoute(ROUTE_NAME), id, {timeout: getTimeout(ROUTE_NAME)})
+        .then((result) => {
+          const response = {
+            'data': {
+              'type': 'status',
+              'attributes': {
+                'updated': result.shouldUpdate,
+              },
+            },
+          };
           res.status(200).send(response);
         })
         .asCallback(next);

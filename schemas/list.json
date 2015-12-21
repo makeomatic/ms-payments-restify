@@ -16,8 +16,7 @@
       "patternProperties": {
         "^.+$": {
           "type": "string",
-          "minLength": 1,
-          "maxLength": 50
+          "minLength": 1
         }
       }
     },
@@ -25,12 +24,13 @@
       "type": "string",
       "minLength": 1
     },
+    "audience": {
+      "type": "string",
+      "minLength": 1
+    },
     "order": {
       "type": "string",
       "enum": [ "ASC", "DESC" ]
-    },
-    "owner": {
-      "type": "string"
     }
   }
 }

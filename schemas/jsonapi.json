@@ -1,0 +1,9 @@
+{
+  "id": "jsonapi",
+  "type": "object",
+  "additionalProperties": false,
+  "oneOf": [
+    { "$ref": "common#/definitions/data" },
+    { "$ref": "common#/defintions/errors" }
+  ]
+}
