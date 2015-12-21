@@ -1,9 +1,11 @@
+const Errors = require('common-errors');
+
 const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementState';
 
 /**
- * @api {post} /agreements/:id/state/:state Change state
+ * @api {post} /agreements/:id/state/:state 3. Change agreement state
  * @apiVersion 1.0.0
  * @apiName AgreementChangeState
  * @apiGroup Agreements
@@ -26,7 +28,7 @@ const ROUTE_NAME = 'agreementState';
  *     -H 'Accept-Version: *'
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/agreements/EC-0JP008296V451950C/state/suspended"
+ *     "https://api-sandbox.cappacity.matic.ninja/api/agreements/EC-0JP008296V451950C/state/suspend"
  *
  * @apiUse ValidationError
  * @apiUse UnauthorizedError
@@ -40,6 +42,12 @@ exports.post = {
   handlers: {
     '1.0.0': function agreementState(req, res, next) {
       const { id, state } = req.params;
+      if (id === null || id === undefined) {
+        return next(new Errors.ArgumentNullError('id'));
+      }
+      if (state === null || state === undefined) {
+        return next(new Errors.ArgumentNullError('state'));
+      }
       return req.amqp
         .publishAndWait(getRoute(ROUTE_NAME), { id, state }, {timeout: getTimeout(ROUTE_NAME)})
         .then(() => {

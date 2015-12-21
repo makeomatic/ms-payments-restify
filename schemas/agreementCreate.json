@@ -3,24 +3,20 @@
   "type": "object",
   "properties": {
     "data": {
-      "allOf": [
-        { "$ref": "common#/definitions/singleData" },
-        {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["agreement"] },
+        "attributes": {
           "type": "object",
+          "required": ["name", "plan"],
           "properties": {
-            "attributes": {
-              "type": "object",
-              "required": ["name", "plan"],
-              "properties": {
-                "name": { "$ref": "common#/definitions/stringProperty" },
-                "description": { "$ref": "common#/definitions/stringProperty" },
-                "start_date": { "$ref": "common#/definitions/stringProperty", "format": "date-time" },
-                "plan": { "$ref": "common#/definitions/stringProperty" }
-              }
-            }
+            "name": { "type": "string", "minLength": 1 },
+            "description": { "type": "string" },
+            "start_date": { "type": "string", "format": "date-time" },
+            "plan": { "type": "string", "minLength": 1 }
           }
         }
-      ]
+      }
     }
   }
 }

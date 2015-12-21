@@ -4,7 +4,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementBill';
 
 /**
- * @api {post} /agreements/:id/bill Bill agreement
+ * @api {post} /agreements/:id/bill 4. Bill agreement
  * @apiVersion 1.0.0
  * @apiName SyncAgreements
  * @apiGroup Agreements
@@ -20,9 +20,12 @@ const ROUTE_NAME = 'agreementBill';
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {string} id Agreement id to check.
+ * @apiParam (Params) {String} id Agreement id to check.
  *
- * @apiSuccess (Return) {boolean} updated True if agreement was billed and models were applied to user.
+ * @apiSuccess (Return) {Object} data Data container.
+ * @apiSuccess (Return) {String} data.type Always 'status'.
+ * @apiSuccess (Return) {Object} data.attributes Status data.
+ * @apiSuccess (Return) {Boolean} data.attributes.updated True if agreement was billed and models were applied to user.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
@@ -44,7 +47,6 @@ exports.post = {
   handlers: {
     '1.0.0': (req, res, next) => {
       const { id } = req.params;
-
       if (id === null || id === undefined) {
         return next(new Errors.ArgumentNullError('id'));
       }

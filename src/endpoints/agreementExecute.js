@@ -3,7 +3,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementExecute';
 
 /**
- * @api {post} /agreements/:token/execute Execute agreement
+ * @api {post} /agreements/:token/execute 2. Execute agreement
  * @apiVersion 1.0.0
  * @apiName ExecuteAgreement
  * @apiGroup Agreements
@@ -22,7 +22,7 @@ const ROUTE_NAME = 'agreementExecute';
  *     -H 'Accept-Version: *'
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/agreements/execute/EC-0JP008296V451950C"
+ *     "https://api-sandbox.cappacity.matic.ninja/api/agreements/EC-0JP008296V451950C/execute"
  *
  * @apiUse ValidationError
  * @apiUse UnauthorizedError
@@ -34,7 +34,7 @@ exports.post = {
   path: '/agreements/:token/execute',
   middleware: ['auth'],
   handlers: {
-    '1.0.0': function createPlan(req, res, next) {
+    '1.0.0': (req, res, next) => {
       return req.amqp
         .publishAndWait(getRoute(ROUTE_NAME), req.params.token, {timeout: getTimeout(ROUTE_NAME)})
         .then(() => {

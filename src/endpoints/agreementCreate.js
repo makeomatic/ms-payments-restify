@@ -6,28 +6,36 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementCreate';
 
 /**
- * @api {post} /agreements Create new agreement
+ * @api {post} /agreements 1. Create new agreement
  * @apiVersion 1.0.0
  * @apiName CreateAgreement
  * @apiGroup Agreements
  * @apiPermission UserPermission
  *
  * @apiDescription
- * Returns new agreement object and link to approve it by user in Location header.
- * Link is also included in agreement.links[rel='approval_url'], user must open it in browser to approve agreement.
+ * Makes PayPal request to create new agreement based on pre-defined plan.
+ * Returns new agreement object and link to approve it by user.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
  * @apiParam (Params) {Object} data Data container.
- * @apiParam (Params) {Object} data.type Data type, must be 'agreement'.
- * @apiParam (Params) {Object} data.attributes.name Any name, required.
- * @apiParam (Params) {Object} data.attributes.description Any description, optional.
- * @apiParam (Params) {Object} data.attributes.start_date Optional date-time to start billing cycle. If not specified, current moment will be used.
- * @apiParam (Params) {Object} data.attributes.plan Plan id, required.
+ * @apiParam (Params) {String} data.type Data type, must be 'agreement'.
+ * @apiParam (Params) {Object} data.attributes New agreement details.
+ * @apiParam (Params) {String} data.attributes.name Any name, required.
+ * @apiParam (Params) {String} data.attributes.description Any description, optional.
+ * @apiParam (Params) {String} data.attributes.start_date Optional date-time to start billing cycle. If not specified, current moment will be used.
+ * @apiParam (Params) {String} data.attributes.plan Plan id, required.
  *
- * @apiSuccess (Return)
+ * @apiSuccess (Return) {Object} data Data container.
+ * @apiSuccess (Return) {String} data.id Id of newly created agreement.
+ * @apiSuccess (Return) {String} data.type Data type, always is 'agreement'.
+ * @apiSuccess (Return) {Object} data.attributes Full agreement object returned by PayPal (contains additional data from plan).
+ * @apiSuccess (Return) {Object} data.links
+ * @apiSuccess (Return) {String} data.links.approve Link user must open to choose desired cycle option (monthly or annual) and approve agreement.
+ * @apiSuccess (Return) {Object} data.meta
+ * @apiSuccess (Return) {String} data.meta.token Agreement token, this must be used to execute approved agreement (see agreementExecute).
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
