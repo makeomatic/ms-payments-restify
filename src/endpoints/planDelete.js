@@ -1,9 +1,11 @@
+const Errors = require('common-errors');
+
 const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planDelete';
 
 /**
- * @api {delete} /plans/:id Delete plan
+ * @api {delete} /plans/:id 3. Delete plan
  * @apiVersion 1.0.0
  * @apiName deletePlan
  * @apiGroup Plans
@@ -35,9 +37,13 @@ exports.del = {
   path: '/plans/:id',
   middleware: ['auth', 'admin'],
   handlers: {
-    '1.0.0': function createPlan(req, res, next) {
+    '1.0.0': (req, res, next) => {
+      const { id } = req.params;
+      if (id === null || id === undefined) {
+        return next(new Errors.ArgumentNullError('id'));
+      }
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), req.params.id, {timeout: getTimeout(ROUTE_NAME)})
+        .publishAndWait(getRoute(ROUTE_NAME), id, {timeout: getTimeout(ROUTE_NAME)})
         .then(() => {
           res.send(200);
         })

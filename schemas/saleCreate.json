@@ -1,5 +1,5 @@
 {
-  "id": "agreement.create",
+  "id": "sale.create",
   "type": "object",
   "required": ["data"],
   "properties": {

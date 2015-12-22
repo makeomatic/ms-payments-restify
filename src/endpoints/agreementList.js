@@ -73,7 +73,7 @@ exports.get = {
   path: '/agreements',
   middleware: ['auth', 'admin'],
   handlers: {
-    '1.0.0': function createPlan(req, res, next) {
+    '1.0.0': (req, res, next) => {
       return createRequest(req, ROUTE_NAME)
         .spread(createResponse(res))
         .then((plans) => { res.send(plans); })

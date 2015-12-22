@@ -1,37 +1,12 @@
 {
   "id": "common",
   "definitions": {
-    "stringProperty": {
-      "type": "string",
-      "minLength": 1
-    },
-    "data": {
-      "oneOf": [
-        { "$ref": "common#/definitions/singleData" },
-        { "type": "array", "items": { "$ref": "common#/definitions/singleData" } }
-      ]
-    },
-    "errors": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "id": { "$ref": "common#/stringProperty" },
-          "status": { "$ref": "common#/stringProperty" },
-          "code": { "$ref": "common#/stringProperty" },
-          "title": { "$ref": "common#/stringProperty" },
-          "detail": { "$ref": "common#/stringProperty" }
-        }
-      }
-    },
-    "singleData": {
+    "subscription": {
       "type": "object",
-      "required": ["type"],
       "properties": {
-        "id": { "$ref": "common#/stringProperty" },
-        "type": { "$ref": "common#/stringProperty" },
-        "attributes": { "type": "object" },
-        "links": { "type": "object" }
+        "price": { "type": "string", "minLength": 1 },
+        "models": { "type": "string", "minLength": 1 },
+        "model_price": { "type": "string", "minLength": 1 }
       }
     }
   }

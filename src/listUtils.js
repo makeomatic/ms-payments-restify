@@ -15,8 +15,11 @@ function createRequest(req, ROUTE_NAME) {
   return Promise.try(function verifyRights() {
     const { order, filter, offset, limit, sortBy } = req.query;
     const parsedFilter = filter && JSON.parse(decodeURIComponent(filter)) || {};
-    if (!req.user.isAdmin()) {
+    if (!req.user.isAdmin() && (ROUTE_NAME === 'agreementList' || ROUTE_NAME === 'saleList')) {
       parsedFilter.owner = req.user.id;
+    }
+    if (!req.user.isAdmin() && ROUTE_NAME === 'planList') {
+      parsedFilter.hidden = false;
     }
     return ld.compactObject({
       order: (order || 'DESC').toUpperCase(),

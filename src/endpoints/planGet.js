@@ -1,9 +1,11 @@
+const Errors = require('common-errors');
+
 const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planGet';
 
 /**
- * @api {get} /plans/:id Get plan
+ * @api {get} /plans/:id 4. Get plan
  * @apiVersion 1.0.0
  * @apiName getPlan
  * @apiGroup Plans
@@ -36,9 +38,13 @@ exports.get = {
   path: '/plans/:id',
   middleware: ['auth'],
   handlers: {
-    '1.0.0': function createPlan(req, res, next) {
+    '1.0.0': (req, res, next) => {
+      const { id } = req.params;
+      if (id === null || id === undefined) {
+        return next(new Errors.ArgumentNullError('id'));
+      }
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), req.params.id, {timeout: getTimeout(ROUTE_NAME)})
+        .publishAndWait(getRoute(ROUTE_NAME), id, {timeout: getTimeout(ROUTE_NAME)})
         .then(plan => {
           res.status(200).send(plan);
         })

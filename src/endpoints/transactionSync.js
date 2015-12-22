@@ -16,9 +16,12 @@ const ROUTE_NAME = 'transactionSync';
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {string} id Agreement id to sync transactions.
- * @apiParam (Params) {string} start Date to start sync from.
- * @apiParam (Params) {string} end Date to end sync on.
+ * @apiParam (Params) {Object} data Data container.
+ * @apiParam (Params) {String} data.type Data type, must be 'agreement'.
+ * @apiParam (Params) {Object} data.attributes New agreement details.
+ * @apiParam (Params) {String} data.attributes.id Agreement id to sync transactions.
+ * @apiParam (Params) {String} data.attributes.start Date to start sync from.
+ * @apiParam (Params) {String} data.attributes.end Date to end sync on.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
@@ -31,19 +34,24 @@ const ROUTE_NAME = 'transactionSync';
  * @apiUse ValidationError
  * @apiUse ForbiddenResponse
  *
- * @apiSuccessExample {json} Success-Created:
+ * @apiSuccessExample {json} Success:
  *  HTTP/1.1 200 OK
  */
 exports.post = {
   path: '/transactions/sync',
   middleware: ['auth', 'admin'],
   handlers: {
-    '1.0.0': function createPlan(req, res, next) {
-      return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), req.body, {timeout: getTimeout(ROUTE_NAME)})
-        .then(() => {
-          res.send(200);
+    '1.0.0': (req, res, next) => {
+      return validator.validate('agreement.create', req.body)
+        .then((body) => {
+          const message = {
+            id: body.data.attributes.id,
+            start: body.data.attributes.start,
+            end: body.data.attributes.end,
+          };
+          return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, {timeout: getTimeout(ROUTE_NAME)});
         })
+        .then(() => { res.send(200); })
         .asCallback(next);
     },
   },

@@ -72,14 +72,15 @@ exports.post = {
     '1.0.0': (req, res, next) => {
       return validator.validate('agreement.create', req.body)
         .then((body) => {
+          const agreement = body.data.attributes;
           const dateFormat = 'YYYY-MM-DDTHH:MM:SSZ';
-          const realDate = body.attributes.start_date && moment(body.attributes.start_date) || moment();
+          const realDate = agreement.start_date && moment(agreement.start_date) || moment();
           const message = {
-            name: body.attributes.name,
-            description: body.attributes.description,
+            name: agreement.name,
+            description: agreement.description,
             start_date: realDate.format(dateFormat),
             plan: {
-              id: body.attributes.plan,
+              id: agreement.plan,
             },
             payer: {
               payment_method: 'paypal',
@@ -89,16 +90,14 @@ exports.post = {
         })
         .then(result => {
           const response = {
-            'data': {
-              'id': result.agreement.id,
-              'type': 'agreement',
-              'attributes': result.agreement,
-              'links': {
-                'approve': result.url,
-              },
-              'meta': {
-                'token': result.token,
-              },
+            'id': result.agreement.id,
+            'type': 'agreement',
+            'attributes': result.agreement,
+            'links': {
+              'approve': result.url,
+            },
+            'meta': {
+              'token': result.token,
             },
           };
           res.status(201).send(response);

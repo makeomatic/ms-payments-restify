@@ -1,10 +1,11 @@
+const validator = require('../validator.js');
+
 const config = require('../config.js');
-const ld = require('lodash');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planCreate';
 
 /**
- * @api {post} /plans Create plan
+ * @api {post} /plans 1. Create a plan
  * @apiVersion 1.0.0
  * @apiName CreatePlan
  * @apiGroup Plans
@@ -20,9 +21,22 @@ const ROUTE_NAME = 'planCreate';
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {boolean} hidden Hides plan from users.
- * @apiParam (Params) {string} alias Readable name for plan, mostly for admin usage.
- * @apiParam (Params) {object} plan Plan object, according to schema.
+ * @apiParam (Params) {Object}  data Data container.
+ * @apiParam (Params) {String}  data.type Data type, must be 'plan'.
+ * @apiParam (Params) {Object}  data.attributes New agreement details.
+ * @apiParam (Params) {Boolean} data.attributes.hidden Hides plan from users, default is false.
+ * @apiParam (Params) {String}  data.attributes.alias Readable name for plan, mostly for admin usage.
+ * @apiParam (Params) {String}  data.attributes.name Name for a plan to be displayed in admin panel and for users, required.
+ * @apiParam (Params) {String}  data.attributes.description Optional description.
+ * @apiParam (Params) {String}  data.attributes.subscriptions Subscriptions options.
+ * @apiParam (Params) {String}  data.attributes.subscriptions.monthly Monthly options.
+ * @apiParam (Params) {String}  data.attributes.subscriptions.monthly.price Subscription price.
+ * @apiParam (Params) {String}  data.attributes.subscriptions.monthly.models Amount of models for this subscription.
+ * @apiParam (Params) {String}  data.attributes.subscriptions.monthly.model_price How much additional model cost.
+ * @apiParam (Params) {String}  data.attributes.subscriptions.yearly Yearly options.
+ * @apiParam (Params) {String}  data.attributes.subscriptions.yearly.price Subscription price.
+ * @apiParam (Params) {String}  data.attributes.subscriptions.yearly.models Amount of models for this subscription.
+ * @apiParam (Params) {String}  data.attributes.subscriptions.yearly.model_price How much additional model cost.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
@@ -30,7 +44,22 @@ const ROUTE_NAME = 'planCreate';
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
  *     "https://api-sandbox.cappacity.matic.ninja/api/plans"
- *     -d '{ "hidden": false, "alias": "mega-plan", "plan": <plan object> }'
+ *     -d '{ "data": { "type": "plan", "attributes": {
+ *       "name": "Test",
+ *       "description": "Test plan",
+ *       "subscriptions": {
+ *         "monthly": {
+ *           "price": "9.99",
+ *           "models": "100",
+ *           "model_price": "0.09"
+ *         },
+ *         "yearly": {
+ *           "price": "99.99",
+ *           "models": "1500",
+ *           "model_price": "0.01"
+ *         }
+ *       }
+ *     } }'
  *
  * @apiUse ValidationError
  * @apiUse UnauthorizedError
@@ -38,19 +67,85 @@ const ROUTE_NAME = 'planCreate';
  *
  * @apiSuccessExample {json} Success-Created:
  *  HTTP/1.1 201 Created
- *  Location: https://api.sandbox.paypal.com/v1/payments/billing-plans/P-94458432VR012762KRWBZEUA
- *  { <plan object> }
+ *  { "data": { "type": "plan", "attributes": { ... } }
  */
 exports.post = {
   path: '/plans',
   middleware: ['auth', 'admin'],
   handlers: {
-    '1.0.0': function createPlan(req, res, next) {
-      return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), req.body, {timeout: getTimeout(ROUTE_NAME)})
+    '1.0.0': (req, res, next) => {
+      return validator.validate('plan.create', req.body)
+        .then((body) => {
+          const plan = body.data.attributes;
+
+          const monthly = {
+            name: 'monthly',
+            type: 'regular',
+            frequency_interval: '1',
+            frequency: 'month',
+            cycles: '0',
+            amount: {
+              currency: 'USD',
+              value: plan.subscriptions.monthly.price,
+            },
+            charge_models: [{
+              type: 'tax',
+              amount: {
+                currency: 'USD',
+                value: '0.0',
+              },
+            }],
+          };
+
+          const yearly = {
+            name: 'yearly',
+            type: 'regular',
+            frequency_interval: '1',
+            frequency: 'year',
+            cycles: '0',
+            amount: {
+              currency: 'USD',
+              value: plan.subscriptions.yearly.price,
+            },
+            charge_models: [{
+              type: 'tax',
+              amount: {
+                currency: 'USD',
+                value: '0.0',
+              },
+            }],
+          };
+
+          const message = {
+            hidden: plan.hidden || false,
+            alias: plan.alias || '',
+            plan: {
+              name: plan.name,
+              description: plan.description || '',
+              type: 'infinite',
+              payment_definitions: [monthly, yearly],
+            },
+            subscriptions: [{
+              models: plan.subscriptions.monthly.models,
+              price: plan.subscriptions.monthly.model_price,
+              name: 'monthly',
+            }, {
+              models: plan.subscriptions.yearly.models,
+              price: plan.subscriptions.yearly.model_price,
+              name: 'yearly',
+            }],
+          };
+
+          return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, {timeout: getTimeout(ROUTE_NAME)});
+        })
         .then(plan => {
-          res.setHeader('Location', ld.findWhere(plan.links, {rel: 'self'}));
-          res.status(302).send(plan);
+          const result = {
+            id: plan.id,
+            type: 'plan',
+            attributes: plan,
+          };
+
+          res.status(201).send(result);
         })
         .asCallback(next);
     },

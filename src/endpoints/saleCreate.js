@@ -9,8 +9,7 @@ const ROUTE_NAME = 'saleCreate';
  * @apiGroup Sales
  * @apiPermission UserPermission
  *
- * @apiDescription
- * Returns new sale object, token for it and approval url for user.
+ * @apiDescription Use this to create a sale for additional models.
  *
  * @apiSuccess (201) {object} plan Plan object as returned from PayPal with additional fields like id.
  *

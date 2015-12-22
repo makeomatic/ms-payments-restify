@@ -35,8 +35,12 @@ exports.post = {
   middleware: ['auth'],
   handlers: {
     '1.0.0': (req, res, next) => {
+      const { token } = req.params;
+      if (token === null || token === undefined) {
+        return next(new Errors.ArgumentNullError('token'));
+      }
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), req.params.token, {timeout: getTimeout(ROUTE_NAME)})
+        .publishAndWait(getRoute(ROUTE_NAME), token, {timeout: getTimeout(ROUTE_NAME)})
         .then(() => {
           res.send(204);
         })
