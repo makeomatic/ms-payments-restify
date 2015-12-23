@@ -40,6 +40,7 @@ const ROUTE_NAME = 'saleExecute';
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
  *     "https://api-sandbox.cappacity.matic.ninja/api/sales/execute/EC-0JP008296V451950C"
+ *     -d '{ data: { type: "executionOrder", attributes: { "payment_id": "someid", "payer_id": "anotherid" } } }'
  *
  * @apiUse ValidationError
  * @apiUse UnauthorizedError

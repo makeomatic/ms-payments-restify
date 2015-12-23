@@ -11,7 +11,7 @@ const ROUTE_NAME = 'planUpdate';
  * @apiGroup Plans
  * @apiPermission AdminPermission
  *
- * @apiDescription Updates plan definition. Doesn't work yet.
+ * @apiDescription Updates plan definition. Not implemented yet, always returns 505.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
@@ -42,7 +42,10 @@ exports.patch = {
   path: '/plans/:id',
   middleware: ['auth'],
   handlers: {
-    '1.0.0': function createPlan(req, res, next) {
+    '1.0.0': (req, res, next) => {
+      res.status(505);
+      return next();
+      /*
       const { id } = req.params;
       const query = req.body;
       if (id === null || id === undefined) {
@@ -57,6 +60,7 @@ exports.patch = {
           res.status(200).send(plan);
         })
         .asCallback(next);
-    }
-  }
+      */
+    },
+  },
 };
