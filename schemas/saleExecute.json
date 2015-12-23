@@ -1,5 +1,5 @@
 {
-  "id": "sale.create",
+  "id": "sale.execute",
   "type": "object",
   "required": ["data"],
   "properties": {
