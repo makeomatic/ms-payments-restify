@@ -5,7 +5,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planCreate';
 
 /**
- * @api {post} /plans 1. Create a plan
+ * @api {post} /plans Create plan
  * @apiVersion 1.0.0
  * @apiName CreatePlan
  * @apiGroup Plans

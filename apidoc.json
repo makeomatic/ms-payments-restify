@@ -1,0 +1,25 @@
+{
+  "title": "REST endpoints for payments API",
+  "order": [
+    "Plans",
+    "Agreements",
+    "Sales",
+    "Transactions",
+    "CreatePlan",
+    "UpdatePlan",
+    "DeletePlan",
+    "GetPlan",
+    "ChangePlanState",
+    "ListPlans",
+    "CreateAgreement",
+    "ExecuteAgreement",
+    "AgreementChangeState",
+    "BillAgreement",
+    "ListAgreements",
+    "CreateSale",
+    "ExecuteSale",
+    "ListSales",
+    "SyncTransactions",
+    "ListTransactions"
+  ]
+}

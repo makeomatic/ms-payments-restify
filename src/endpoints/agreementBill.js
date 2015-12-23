@@ -4,9 +4,9 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementBill';
 
 /**
- * @api {post} /agreements/:id/bill 4. Bill agreement
+ * @api {post} /agreements/:id/bill Bill agreement
  * @apiVersion 1.0.0
- * @apiName SyncAgreements
+ * @apiName BillAgreement
  * @apiGroup Agreements
  * @apiPermission NonePermission
  *

@@ -2,7 +2,7 @@ const ROUTE_NAME = 'planList';
 const { createRequest, createResponse } = require('../listUtils');
 
 /**
- * @api {get} /plans 6. List plans
+ * @api {get} /plans List plans
  * @apiVersion 1.0.0
  * @apiName ListPlans
  * @apiGroup Plans

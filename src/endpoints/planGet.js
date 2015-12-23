@@ -5,9 +5,9 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planGet';
 
 /**
- * @api {get} /plans/:id 4. Get plan
+ * @api {get} /plans/:id Get plan
  * @apiVersion 1.0.0
- * @apiName getPlan
+ * @apiName GetPlan
  * @apiGroup Plans
  * @apiPermission UserPermission
  *

@@ -3,7 +3,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementExecute';
 
 /**
- * @api {post} /agreements/:token/execute 2. Execute agreement
+ * @api {post} /agreements/:token/execute Execute agreement
  * @apiVersion 1.0.0
  * @apiName ExecuteAgreement
  * @apiGroup Agreements

@@ -2,7 +2,7 @@ const ROUTE_NAME = 'agreementList';
 const { createRequest, createResponse } = require('../listUtils');
 
 /**
- * @api {get} /agreements 5. List agreements
+ * @api {get} /agreements List agreements
  * @apiVersion 1.0.0
  * @apiName ListAgreements
  * @apiGroup Agreements

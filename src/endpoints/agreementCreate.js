@@ -6,7 +6,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementCreate';
 
 /**
- * @api {post} /agreements 1. Create new agreement
+ * @api {post} /agreements Create agreement
  * @apiVersion 1.0.0
  * @apiName CreateAgreement
  * @apiGroup Agreements

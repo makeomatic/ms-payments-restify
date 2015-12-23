@@ -5,9 +5,9 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planDelete';
 
 /**
- * @api {delete} /plans/:id 3. Delete plan
+ * @api {delete} /plans/:id Delete plan
  * @apiVersion 1.0.0
- * @apiName deletePlan
+ * @apiName DeletePlan
  * @apiGroup Plans
  * @apiPermission AdminPermission
  *

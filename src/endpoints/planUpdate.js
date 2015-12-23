@@ -5,7 +5,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planUpdate';
 
 /**
- * @api {patch} /plans/:id 2. Update plan
+ * @api {patch} /plans/:id Update plan
  * @apiVersion 1.0.0
  * @apiName UpdatePlan
  * @apiGroup Plans

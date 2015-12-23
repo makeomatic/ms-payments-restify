@@ -3,7 +3,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'saleExecute';
 
 /**
- * @api {post} /sales/:token/execute Execute pre-approved sale
+ * @api {post} /sales/:token/execute Execute sale
  * @apiVersion 1.0.0
  * @apiName ExecuteSale
  * @apiGroup Sales

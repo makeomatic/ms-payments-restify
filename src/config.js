@@ -29,6 +29,12 @@ const config = module.exports = {
     },
     timeouts: {},
   },
+  // point these to address that will execute sale in case of return or delete sale in case of cancel.
+  // w/o these endpoints sales will not work.
+  sales: {
+    return_url: '',
+    cancel_url: '',
+  },
 };
 
 /**

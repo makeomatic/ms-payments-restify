@@ -5,7 +5,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementState';
 
 /**
- * @api {post} /agreements/:id/state/:state 3. Change agreement state
+ * @api {post} /agreements/:id/state/:state Change agreement state
  * @apiVersion 1.0.0
  * @apiName AgreementChangeState
  * @apiGroup Agreements
