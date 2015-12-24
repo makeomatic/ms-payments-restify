@@ -1,5 +1,6 @@
 const ld = require('lodash');
 const users = require('ms-users-restify');
+const BLACK_LIST = ['reconfigure', 'getTimeout', 'getRoute'];
 
 /**
  * Default configuration object
@@ -47,8 +48,8 @@ module.exports = exports = config;
  * Reconfigures instance
  */
 exports.reconfigure = function reconfigure(opts) {
-  ld.merge(config, opts);
-  users.reconfigure(config);
+  ld.merge(config, ld.omit(opts, BLACK_LIST));
+  users.reconfigure(ld.omit(config, BLACK_LIST));
 };
 
 /**
