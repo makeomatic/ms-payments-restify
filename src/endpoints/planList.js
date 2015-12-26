@@ -61,11 +61,11 @@ const { createRequest, createResponse } = require('../listUtils');
  * 					...
  * 				},
  * 				"links": {
- * 					"self": "https://localhost:443/api/plans/PP-10200414C5"
+ * 					"self": "https://localhost:443/api/payments/plans/PP-10200414C5"
  * 				}
  * 			}],
  * 			"links": {
- * 				"self": "https://localhost:443/api/plans?cursor=91&limit=10"
+ * 				"self": "https://localhost:443/api/payments/plans?cursor=91&limit=10"
  * 			}
  * 		}
  */
@@ -75,8 +75,8 @@ exports.get = {
   handlers: {
     '1.0.0': (req, res, next) => {
       return createRequest(req, ROUTE_NAME)
-        .spread(createResponse(res, 'plans'))
-        .then((plans) => { res.send(plans); })
+        .spread(createResponse(res, 'plans', 'plan', 'full'))
+        .then(plans => { res.send(plans); })
         .asCallback(next);
     },
   },

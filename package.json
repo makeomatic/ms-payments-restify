@@ -1,6 +1,6 @@
 {
   "name": "ms-payments-restify",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "HTTP adapter for ms-payments",
   "main": "./lib/index.js",
   "scripts": {
@@ -42,9 +42,8 @@
     "bunyan": "^1.5.1",
     "chai": "^3.4.1",
     "eslint": "^1.8.0",
-    "eslint-config-airbnb": "^1.0.0",
+    "eslint-config-airbnb": "^2.1.1",
     "eslint-plugin-mocha": "^1.1.0",
-    "eslint-plugin-react": "^3.9.0",
     "json": "^9.0.3",
     "mocha": "^2.3.4"
   }

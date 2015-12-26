@@ -1,13 +1,4 @@
 {
-  "extends": "airbnb",
-  "parser": "babel-eslint",
-  "plugins": [
-    "mocha"
-  ],
-  "ecmaFeatures": {
-    "classes": true
-  },
-  "env": {
-    "mocha": true
-  }
+  "extends": "airbnb/base",
+  "parser": "babel-eslint"
 }

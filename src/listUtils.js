@@ -15,12 +15,15 @@ function createRequest(req, ROUTE_NAME) {
   return Promise.try(function verifyRights() {
     const { order, filter, offset, limit, sortBy } = req.query;
     const parsedFilter = filter && JSON.parse(decodeURIComponent(filter)) || {};
+
     if (!req.user.isAdmin() && (ROUTE_NAME === 'agreementList' || ROUTE_NAME === 'saleList')) {
       parsedFilter.owner = req.user.id;
     }
+
     if (!req.user.isAdmin() && ROUTE_NAME === 'planList') {
-      parsedFilter.hidden = false;
+      parsedFilter.hidden = 'false';
     }
+
     return ld.compactObject({
       order: (order || 'DESC').toUpperCase(),
       offset: offset && +offset || undefined,
@@ -44,7 +47,7 @@ function createRequest(req, ROUTE_NAME) {
   });
 }
 
-function createResponse(res, subroute) {
+function createResponse(res, subroute, type, idField) {
   return (answer, message) => {
     const { page, pages, cursor } = answer;
     const { order, filter, offset, limit, criteria: sortBy } = message;
@@ -69,9 +72,11 @@ function createResponse(res, subroute) {
       res.links.next = `${base}?${qs(nextQS)}`;
     }
 
-    return Promise.resolve(answer.items);
+    return Promise.resolve(answer.items.map(item => {
+      return idField ? { id: item[idField], type, attributes: item } : { type, attributes: item };
+    }));
   };
 }
 
-module.exports.createRequest = createRequest;
-module.exports.createResponse = createResponse;
+exports.createRequest = createRequest;
+exports.createResponse = createResponse;
