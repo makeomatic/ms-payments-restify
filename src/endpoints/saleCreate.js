@@ -79,8 +79,6 @@ exports.post = {
           const message = {
             owner: user,
             amount: body.data.attributes.amount,
-            return_url: config.sales.return_url,
-            cancel_url: config.sales.cancel_url,
           };
           return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, {timeout: getTimeout(ROUTE_NAME)});
         })
