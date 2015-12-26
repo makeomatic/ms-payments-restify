@@ -75,7 +75,7 @@ exports.get = {
   handlers: {
     '1.0.0': (req, res, next) => {
       return createRequest(req, ROUTE_NAME)
-        .spread(createResponse(res))
+        .spread(createResponse(res, 'plans'))
         .then((plans) => { res.send(plans); })
         .asCallback(next);
     },

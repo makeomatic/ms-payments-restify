@@ -44,7 +44,7 @@ function createRequest(req, ROUTE_NAME) {
   });
 }
 
-function createResponse(res) {
+function createResponse(res, subroute) {
   return (answer, message) => {
     const { page, pages, cursor } = answer;
     const { order, filter, offset, limit, criteria: sortBy } = message;
@@ -58,7 +58,7 @@ function createResponse(res) {
 
     res.meta = { page, pages };
 
-    const base = config.host + config.files.attachPoint;
+    const base = config.host + config.payments.attachPoint + '/' + subroute;
     res.links = {
       self: `${base}?${qs(selfQS)}`,
     };

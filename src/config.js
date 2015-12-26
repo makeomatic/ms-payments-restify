@@ -29,6 +29,7 @@ const config = module.exports = {
       'saleList': 'sale.list',
     },
     timeouts: {},
+    attachPoint: 'payments',
   },
   // point these to address that will execute sale in case of return or delete sale in case of cancel.
   // w/o these endpoints sales will not work.
