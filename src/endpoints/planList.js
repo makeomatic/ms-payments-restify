@@ -7,7 +7,7 @@ const { middlware: { auth } } = require('ms-users-restify');
  * @apiVersion 1.0.0
  * @apiName ListPlans
  * @apiGroup Plans
- * @apiPermission UserPermission
+ * @apiPermission none
  *
  * @apiDescription Returns array of plan objects.
  *
