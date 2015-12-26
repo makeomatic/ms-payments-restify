@@ -16,12 +16,13 @@ function createRequest(req, ROUTE_NAME) {
     const { order, filter, offset, limit, sortBy } = req.query;
     const parsedFilter = filter && JSON.parse(decodeURIComponent(filter)) || {};
 
-    if (!req.user.isAdmin() && (ROUTE_NAME === 'agreementList' || ROUTE_NAME === 'saleList')) {
-      parsedFilter.owner = req.user.id;
-    }
-
-    if (!req.user.isAdmin() && ROUTE_NAME === 'planList') {
-      parsedFilter.hidden = 'false';
+    if (!req.user || !req.user.isAdmin()) {
+      if (ROUTE_NAME === 'agreementList' || ROUTE_NAME === 'saleList') {
+        // user is always defined here as required by the right
+        parsedFilter.owner = req.user.id;
+      } else if (ROUTE_NAME === 'planList') {
+        parsedFilter.hidden = 'false';
+      }
     }
 
     return ld.compactObject({

@@ -1,5 +1,6 @@
 const ROUTE_NAME = 'planList';
 const { createRequest, createResponse } = require('../listUtils');
+const { middlware: { auth } } = require('ms-users-restify');
 
 /**
  * @api {get} /plans List plans
@@ -71,13 +72,16 @@ const { createRequest, createResponse } = require('../listUtils');
  */
 exports.get = {
   path: '/plans',
-  middleware: ['auth'],
   handlers: {
-    '1.0.0': (req, res, next) => {
-      return createRequest(req, ROUTE_NAME)
-        .spread(createResponse(res, 'plans', 'plan', 'full'))
-        .then(plans => { res.send(plans); })
-        .asCallback(next);
+    '1.0.0': function listPlans(req, res, next) {
+      return auth(req, res, function verifiedToken() {
+        // we dump error here
+
+        return createRequest(req, ROUTE_NAME)
+          .spread(createResponse(res, 'plans', 'plan', 'full'))
+          .then(plans => { res.send(plans); })
+          .asCallback(next);
+      });
     },
   },
 };
