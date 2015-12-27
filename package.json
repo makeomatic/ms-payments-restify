@@ -1,6 +1,6 @@
 {
   "name": "ms-payments-restify",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "description": "HTTP adapter for ms-payments",
   "main": "./lib/index.js",
   "scripts": {
