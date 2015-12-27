@@ -25,7 +25,7 @@ const ROUTE_NAME = 'planCreate';
  * @apiParam (Params) {String}  data.type Data type, must be 'plan'.
  * @apiParam (Params) {Object}  data.attributes New agreement details.
  * @apiParam (Params) {Boolean} data.attributes.hidden Hides plan from users, default is false.
- * @apiParam (Params) {String}  data.attributes.alias Readable name for plan, mostly for admin usage.
+ * @apiParam (Params) {String}  data.attributes.alias Plan alias, e.g. 'professional' for internal use, required.
  * @apiParam (Params) {String}  data.attributes.name Name for a plan to be displayed in admin panel and for users, required.
  * @apiParam (Params) {String}  data.attributes.description Optional description.
  * @apiParam (Params) {String}  data.attributes.subscriptions Subscriptions options.
