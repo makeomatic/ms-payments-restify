@@ -98,7 +98,7 @@ function createResponse(res, subroute, type, idField) {
       res.links.next = `${base}?${qs(nextQS)}`;
     }
 
-    const transform = typeof type === 'object' ? modelTransform(type) : dataTransform(type, idField);
+    const transform = typeof type === 'function' ? modelTransform(type) : dataTransform(type, idField);
     return Promise.resolve(answer.items.map(transform));
   };
 }
