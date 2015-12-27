@@ -43,7 +43,6 @@ const ROUTE_NAME = 'agreementCreate';
  *    -H 'Content-Type: application/vnd.api+json' \
  *    -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InZAbWFrZW9tYXRpYy5ydSIsImNzIjoiNTQ3N2UzZDc3ODAwMDAwMCIsImlhdCI6MTQ1MTE1NDY5MywiYXVkIjoiKi5sb2NhbGhvc3QiLCJpc3MiOiJtcy11c2VycyJ9.EJ7DF9R7hF4tRffZgD_zq24WS3V_EB7Iz0o2DQ3uHd8" \
  *    "https://api-sandbox.cappasity.matic.ninja/api/payments/agreements" -d '{
- * -d '{
  *    	"data": {
  *    		"type": "agreement",
  *     		"attributes": {
