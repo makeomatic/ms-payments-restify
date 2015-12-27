@@ -1,6 +1,6 @@
 const ROUTE_NAME = 'planList';
 const { createRequest, createResponse } = require('../listUtils');
-const { middlware: { auth } } = require('ms-users-restify');
+const { middleware: { auth } } = require('ms-users-restify');
 
 /**
  * @api {get} /plans List plans
