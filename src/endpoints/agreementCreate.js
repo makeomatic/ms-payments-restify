@@ -43,6 +43,7 @@ const ROUTE_NAME = 'agreementCreate';
  *    -H 'Content-Type: application/vnd.api+json' \
  *    -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InZAbWFrZW9tYXRpYy5ydSIsImNzIjoiNTQ3N2UzZDc3ODAwMDAwMCIsImlhdCI6MTQ1MTE1NDY5MywiYXVkIjoiKi5sb2NhbGhvc3QiLCJpc3MiOiJtcy11c2VycyJ9.EJ7DF9R7hF4tRffZgD_zq24WS3V_EB7Iz0o2DQ3uHd8" \
  *    "https://api-sandbox.cappasity.matic.ninja/api/payments/agreements" -d '{
+ * -d '{
  *    	"data": {
  *    		"type": "agreement",
  *     		"attributes": {
@@ -84,16 +85,18 @@ exports.post = {
           const dateFormat = 'YYYY-MM-DDTHH:MM:SSZ';
           const realDate = agreement.start_date && moment(agreement.start_date) || moment();
           const message = {
-            name: agreement.name,
-            description: agreement.description,
-            start_date: realDate.format(dateFormat),
-            plan: {
-              id: agreement.plan,
-            },
-            payer: {
-              payment_method: 'paypal',
-            },
             owner: req.user.id,
+            agreement: {
+              name: agreement.name,
+              description: agreement.description,
+              start_date: realDate.format(dateFormat),
+              plan: {
+                id: agreement.plan,
+              },
+              payer: {
+                payment_method: 'paypal',
+              },
+            },
           };
 
           return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) });
