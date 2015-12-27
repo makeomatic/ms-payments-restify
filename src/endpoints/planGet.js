@@ -39,7 +39,7 @@ exports.get = {
       return req.amqp
         .publishAndWait(getRoute(ROUTE_NAME), req.params.id, { timeout: getTimeout(ROUTE_NAME) })
         .then(plan => {
-          res.send(plan);
+          res.send(config.models.Plan.transform(plan, true));
           return false;
         })
         .asCallback(next);

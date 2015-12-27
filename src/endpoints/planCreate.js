@@ -1,5 +1,4 @@
 const validator = require('../validator.js');
-
 const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planCreate';
@@ -136,16 +135,10 @@ exports.post = {
             }],
           };
 
-          return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, {timeout: getTimeout(ROUTE_NAME)});
+          return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) });
         })
         .then(plan => {
-          const result = {
-            id: plan.id,
-            type: 'plan',
-            attributes: plan,
-          };
-
-          res.send(201, result);
+          res.send(201, config.models.Plan.transform(plan, true));
         })
         .asCallback(next);
     },

@@ -48,6 +48,31 @@ function createRequest(req, ROUTE_NAME) {
   });
 }
 
+function modelTransform(model) {
+  return function transform(item) {
+    return model.transform(item, true);
+  };
+}
+
+function dataTransform(type, idField) {
+  if (idField) {
+    return function transform(item) {
+      return {
+        id: item[idField],
+        type,
+        attributes: item,
+      };
+    };
+  }
+
+  return function transform(item) {
+    return {
+      type,
+      attributes: item,
+    };
+  };
+}
+
 function createResponse(res, subroute, type, idField) {
   return (answer, message) => {
     const { page, pages, cursor } = answer;
@@ -73,9 +98,8 @@ function createResponse(res, subroute, type, idField) {
       res.links.next = `${base}?${qs(nextQS)}`;
     }
 
-    return Promise.resolve(answer.items.map(item => {
-      return idField ? { id: item[idField], type, attributes: item } : { type, attributes: item };
-    }));
+    const transform = typeof type === 'object' ? modelTransform(type) : dataTransform(type, idField);
+    return Promise.map(answer.items, transform);
   };
 }
 

@@ -1,4 +1,5 @@
 const ROUTE_NAME = 'planList';
+const config = require('../config.js');
 const { createRequest, createResponse } = require('../listUtils');
 const { middleware: { auth } } = require('ms-users-restify');
 
@@ -78,7 +79,7 @@ exports.get = {
         // we dump error here
 
         return createRequest(req, ROUTE_NAME)
-          .spread(createResponse(res, 'plans', 'plan', 'full'))
+          .spread(createResponse(res, 'plans', config.models.Plan))
           .then(plans => { res.send(plans); })
           .asCallback(next);
       });
