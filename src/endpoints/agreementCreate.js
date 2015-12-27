@@ -83,7 +83,7 @@ exports.post = {
         .then(body => {
           const agreement = body.data.attributes;
           const dateFormat = 'YYYY-MM-DDTHH:MM:SSZ';
-          const realDate = agreement.start_date && moment(agreement.start_date) || moment();
+          const realDate = agreement.start_date && moment(agreement.start_date) || moment().add(1, 'minute');
           const message = {
             owner: req.user.id,
             agreement: {
