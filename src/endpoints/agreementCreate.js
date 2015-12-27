@@ -4,6 +4,12 @@ const validator = require('../validator.js');
 const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementCreate';
+const jwtCookieOpts = {
+  path: config.payments.jwtPrefix || '/',
+  maxAge: 3600,
+  secure: process.env.NODE_ENV === 'production',
+  httpOnly: true,
+};
 
 /**
  * @api {post} /agreements Create agreement
@@ -81,14 +87,14 @@ exports.post = {
       return validator.validate('agreement.create', req.body)
         .then(body => {
           const agreement = body.data.attributes;
-          const dateFormat = 'YYYY-MM-DDTHH:mm:ss\'Z\'';
           const realDate = agreement.start_date && moment(agreement.start_date) || moment().add(1, 'minute');
           const message = {
             owner: req.user.id,
             agreement: {
               name: agreement.name,
               description: agreement.description,
-              start_date: realDate.format(dateFormat),
+              // fuck you paypal: 2015-02-19T00:37:04Z ?!
+              start_date: realDate.format('YYYY-MM-DD[T]HH:mm:ss[Z]'),
               plan: {
                 id: agreement.plan,
               },
@@ -113,7 +119,8 @@ exports.post = {
             },
           };
 
-          res.status(201).send(response);
+          res.setCookie('jwt', req.user.jwt, { ...jwtCookieOpts, domain: req.host });
+          res.send(201, response);
         })
         .asCallback(next);
     },

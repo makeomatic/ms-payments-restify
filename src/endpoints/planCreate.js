@@ -145,7 +145,7 @@ exports.post = {
             attributes: plan,
           };
 
-          res.status(201).send(result);
+          res.send(201, result);
         })
         .asCallback(next);
     },

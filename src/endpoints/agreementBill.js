@@ -61,7 +61,8 @@ exports.post = {
               },
             },
           };
-          res.status(200).send(response);
+
+          res.send(response);
         })
         .asCallback(next);
     },
