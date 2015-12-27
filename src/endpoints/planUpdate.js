@@ -55,7 +55,7 @@ exports.patch = {
       return req.amqp
         .publishAndWait(getRoute(ROUTE_NAME), { id, query }, {timeout: getTimeout(ROUTE_NAME)})
         .then(plan => {
-          res.status(200).send(plan);
+          res.send(plan);
         })
         .asCallback(next);
       */

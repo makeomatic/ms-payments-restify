@@ -113,7 +113,7 @@ exports.post = {
             },
           };
 
-          res.status(201).send(response);
+          res.send(201, response);
         })
         .asCallback(next);
     },
