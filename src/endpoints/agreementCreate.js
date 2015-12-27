@@ -77,7 +77,7 @@ exports.post = {
   path: '/agreements',
   middleware: ['auth'],
   handlers: {
-    '1.0.0': (req, res, next) => {
+    '1.0.0': function agreementCreate(req, res, next) {
       return validator.validate('agreement.create', req.body)
         .then(body => {
           const agreement = body.data.attributes;
