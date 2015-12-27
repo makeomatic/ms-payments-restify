@@ -25,7 +25,7 @@ const ROUTE_NAME = 'planState';
  *     -H 'Accept-Version: *' \
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/plans/state/P-94458432VR012762KRWBZEUA/active"
+ *     "https://api-sandbox.cappacity.matic.ninja/api/payments/plans/P-94458432VR012762KRWBZEUA/state/active"
  *
  * @apiUse ValidationError
  * @apiUse UnauthorizedError
