@@ -1,5 +1,3 @@
-const Errors = require('common-errors');
-
 const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planGet';
@@ -9,7 +7,7 @@ const ROUTE_NAME = 'planGet';
  * @apiVersion 1.0.0
  * @apiName GetPlan
  * @apiGroup Plans
- * @apiPermission UserPermission
+ * @apiPermission none
  *
  * @apiDescription Get billing plan data by id.
  *
@@ -20,11 +18,11 @@ const ROUTE_NAME = 'planGet';
  * @apiParam (Params) {string} id Plan id from list or create method.
  *
  * @apiExample {curl} Example usage:
- *   curl -i
- *     -H 'Accept-Version: *'
+ *   curl \
+ *     -H 'Accept-Version: *' \
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/plans/P-94458432VR012762KRWBZEUA"
+ *     "https://api-sandbox.cappacity.matic.ninja/api/payments/plans/P-94458432VR012762KRWBZEUA"
  *
  * @apiUse ValidationError
  * @apiUse UnauthorizedError
@@ -36,16 +34,10 @@ const ROUTE_NAME = 'planGet';
  */
 exports.get = {
   path: '/plans/:id',
-  middleware: ['auth'],
   handlers: {
     '1.0.0': function getPlan(req, res, next) {
-      const { id } = req.params;
-      if (id === null || id === undefined) {
-        return next(new Errors.ArgumentNullError('id'));
-      }
-
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), id, { timeout: getTimeout(ROUTE_NAME) })
+        .publishAndWait(getRoute(ROUTE_NAME), req.params.id, { timeout: getTimeout(ROUTE_NAME) })
         .then(plan => {
           res.send(plan);
           return false;
