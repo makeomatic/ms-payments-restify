@@ -87,7 +87,8 @@ exports.post = {
             agreement: {
               name: agreement.name,
               description: agreement.description,
-              start_date: realDate.toISOString(),
+              // fuck you paypal: 2015-02-19T00:37:04Z ?!
+              start_date: realDate.format('YYYY-MM-DD[T]HH:mm:ss[Z]'),
               plan: {
                 id: agreement.plan,
               },
