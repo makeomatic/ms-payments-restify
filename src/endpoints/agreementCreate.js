@@ -38,12 +38,21 @@ const ROUTE_NAME = 'agreementCreate';
  * @apiSuccess (Return) {String} data.meta.token Agreement token, this must be used to execute approved agreement (see agreementExecute).
  *
  * @apiExample {curl} Example usage:
- *   curl -i -X POST
- *     -H 'Accept-Version: *'
- *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
- *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/agreements"
- *     -d '{ data: {...} }'
+ * curl -i -X POST -H 'Accept-Version: *' \
+ * -H 'Accept: application/vnd.api+json' \
+ * -H 'Content-Type: application/vnd.api+json' \
+ * -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InZAbWFrZW9tYXRpYy5ydSIsImNzIjoiNTQ3N2UzZDc3ODAwMDAwMCIsImlhdCI6MTQ1MTE1NDY5MywiYXVkIjoiKi5sb2NhbGhvc3QiLCJpc3MiOiJtcy11c2VycyJ9.EJ7DF9R7hF4tRffZgD_zq24WS3V_EB7Iz0o2DQ3uHd8" \
+ * "https://api-sandbox.cappasity.matic.ninja/api/payments/agreements"
+ * -d '{
+ *  "data": {
+ *    "type": "agreement",
+ *    "attributes": {
+ *      "name": "professional-monthly-test",
+ *      "description": "test professional subscription payment with id PD-3EH44571MW10700544AOMJ3I",
+ *      "plan": "PD-3EH44571MW10700544AOMJ3I"
+ *    }
+ *  }
+ * }'
  *
  * @apiUse ValidationError
  * @apiUse UnauthorizedError
@@ -76,14 +85,17 @@ exports.post = {
           const dateFormat = 'YYYY-MM-DDTHH:MM:SSZ';
           const realDate = agreement.start_date && moment(agreement.start_date) || moment();
           const message = {
-            name: agreement.name,
-            description: agreement.description,
-            start_date: realDate.format(dateFormat),
-            plan: {
-              id: agreement.plan,
-            },
-            payer: {
-              payment_method: 'paypal',
+            owner: req.user.id,
+            agreement: {
+              name: agreement.name,
+              description: agreement.description,
+              start_date: realDate.format(dateFormat),
+              plan: {
+                id: agreement.plan,
+              },
+              payer: {
+                payment_method: 'paypal',
+              },
             },
           };
           return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, {timeout: getTimeout(ROUTE_NAME)});
