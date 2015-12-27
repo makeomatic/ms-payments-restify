@@ -21,8 +21,8 @@ const ROUTE_NAME = 'planState';
  * @apiParam (Params) {string} state New state from list: created, active, inactive, deleted
  *
  * @apiExample {curl} Example usage:
- *   curl -i -X PATCH
- *     -H 'Accept-Version: *'
+ *   curl -i -X PATCH \
+ *     -H 'Accept-Version: *' \
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
  *     "https://api-sandbox.cappacity.matic.ninja/api/plans/state/P-94458432VR012762KRWBZEUA/active"
@@ -32,7 +32,7 @@ const ROUTE_NAME = 'planState';
  * @apiUse ForbiddenResponse
  *
  * @apiSuccessExample {json} Success-Updated:
- *  HTTP/1.1 200 OK
+ *  HTTP/1.1 204 No Content
  */
 exports.patch = {
   path: '/plans/:id/state/:state',
@@ -47,9 +47,9 @@ exports.patch = {
         return next(new Errors.ArgumentNullError('state'));
       }
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), { id, state }, {timeout: getTimeout(ROUTE_NAME)})
-        .then(plan => {
-          res.send(200);
+        .publishAndWait(getRoute(ROUTE_NAME), { id, state }, { timeout: getTimeout(ROUTE_NAME) })
+        .then(() => {
+          res.send(204);
         })
         .asCallback(next);
     },
