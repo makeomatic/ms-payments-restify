@@ -99,7 +99,7 @@ function createResponse(res, subroute, type, idField) {
     }
 
     const transform = typeof type === 'object' ? modelTransform(type) : dataTransform(type, idField);
-    return Promise.map(answer.items, transform);
+    return Promise.resolve(answer.items.map(transform));
   };
 }
 
