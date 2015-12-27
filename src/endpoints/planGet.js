@@ -38,15 +38,17 @@ exports.get = {
   path: '/plans/:id',
   middleware: ['auth'],
   handlers: {
-    '1.0.0': (req, res, next) => {
+    '1.0.0': function getPlan(req, res, next) {
       const { id } = req.params;
       if (id === null || id === undefined) {
         return next(new Errors.ArgumentNullError('id'));
       }
+
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), id, {timeout: getTimeout(ROUTE_NAME)})
+        .publishAndWait(getRoute(ROUTE_NAME), id, { timeout: getTimeout(ROUTE_NAME) })
         .then(plan => {
-          res.status(200).send(plan);
+          res.send(plan);
+          return false;
         })
         .asCallback(next);
     },

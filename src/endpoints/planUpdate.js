@@ -1,8 +1,6 @@
-const Errors = require('common-errors');
-
-const config = require('../config.js');
-const { getRoute, getTimeout } = config;
-const ROUTE_NAME = 'planUpdate';
+// const config = require('../config.js');
+// const { getRoute, getTimeout } = config;
+// const ROUTE_NAME = 'planUpdate';
 
 /**
  * @api {patch} /plans/:id Update plan
@@ -42,9 +40,9 @@ exports.patch = {
   path: '/plans/:id',
   middleware: ['auth'],
   handlers: {
-    '1.0.0': (req, res, next) => {
-      res.status(505);
-      return next();
+    '1.0.0': function planUpdate(req, res, next) {
+      res.send(505);
+      return next(false);
       /*
       const { id } = req.params;
       const query = req.body;

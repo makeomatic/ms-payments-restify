@@ -38,7 +38,7 @@ exports.patch = {
   path: '/plans/:id/state/:state',
   middleware: ['auth', 'admin'],
   handlers: {
-    '1.0.0': function createPlan(req, res, next) {
+    '1.0.0': function updatePlanState(req, res, next) {
       const { id, state } = req.params;
       if (id === null || id === undefined) {
         return next(new Errors.ArgumentNullError('id'));
