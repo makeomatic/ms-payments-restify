@@ -1,6 +1,7 @@
 const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementExecute';
+const Errors = require('common-errors');
 
 /**
  * @api {post} /agreements/:token/execute Execute agreement
@@ -39,8 +40,12 @@ exports.post = {
       if (token === null || token === undefined) {
         return next(new Errors.ArgumentNullError('token'));
       }
+      const message = {
+        owner: req.user.id,
+        token
+      };
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), token, {timeout: getTimeout(ROUTE_NAME)})
+        .publishAndWait(getRoute(ROUTE_NAME), message, {timeout: getTimeout(ROUTE_NAME)})
         .then(() => {
           res.send(204);
         })
