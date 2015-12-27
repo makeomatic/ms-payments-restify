@@ -4,6 +4,12 @@ const validator = require('../validator.js');
 const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementCreate';
+const jwtCookieOpts = {
+  path: config.payments.jwtPrefix || '/',
+  maxAge: 3600,
+  secure: process.env.NODE_ENV === 'production',
+  httpOnly: true,
+};
 
 /**
  * @api {post} /agreements Create agreement
@@ -113,6 +119,7 @@ exports.post = {
             },
           };
 
+          res.setCookie('jwt', req.user.jwt, { ...jwtCookieOpts, domain: req.host });
           res.send(201, response);
         })
         .asCallback(next);
