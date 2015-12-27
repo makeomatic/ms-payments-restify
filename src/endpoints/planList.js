@@ -1,12 +1,13 @@
 const ROUTE_NAME = 'planList';
 const { createRequest, createResponse } = require('../listUtils');
+const { middleware: { auth } } = require('ms-users-restify');
 
 /**
  * @api {get} /plans List plans
  * @apiVersion 1.0.0
  * @apiName ListPlans
  * @apiGroup Plans
- * @apiPermission UserPermission
+ * @apiPermission none
  *
  * @apiDescription Returns array of plan objects.
  *
@@ -61,23 +62,26 @@ const { createRequest, createResponse } = require('../listUtils');
  * 					...
  * 				},
  * 				"links": {
- * 					"self": "https://localhost:443/api/plans/PP-10200414C5"
+ * 					"self": "https://localhost:443/api/payments/plans/PP-10200414C5"
  * 				}
  * 			}],
  * 			"links": {
- * 				"self": "https://localhost:443/api/plans?cursor=91&limit=10"
+ * 				"self": "https://localhost:443/api/payments/plans?cursor=91&limit=10"
  * 			}
  * 		}
  */
 exports.get = {
   path: '/plans',
-  middleware: ['auth'],
   handlers: {
-    '1.0.0': (req, res, next) => {
-      return createRequest(req, ROUTE_NAME)
-        .spread(createResponse(res))
-        .then((plans) => { res.send(plans); })
-        .asCallback(next);
+    '1.0.0': function listPlans(req, res, next) {
+      return auth(req, res, function verifiedToken() {
+        // we dump error here
+
+        return createRequest(req, ROUTE_NAME)
+          .spread(createResponse(res, 'plans', 'plan', 'full'))
+          .then(plans => { res.send(plans); })
+          .asCallback(next);
+      });
     },
   },
 };

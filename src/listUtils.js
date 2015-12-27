@@ -15,12 +15,16 @@ function createRequest(req, ROUTE_NAME) {
   return Promise.try(function verifyRights() {
     const { order, filter, offset, limit, sortBy } = req.query;
     const parsedFilter = filter && JSON.parse(decodeURIComponent(filter)) || {};
-    if (!req.user.isAdmin() && (ROUTE_NAME === 'agreementList' || ROUTE_NAME === 'saleList')) {
-      parsedFilter.owner = req.user.id;
+
+    if (!req.user || !req.user.isAdmin()) {
+      if (ROUTE_NAME === 'agreementList' || ROUTE_NAME === 'saleList') {
+        // user is always defined here as required by the right
+        parsedFilter.owner = req.user.id;
+      } else if (ROUTE_NAME === 'planList') {
+        parsedFilter.hidden = 'false';
+      }
     }
-    if (!req.user.isAdmin() && ROUTE_NAME === 'planList') {
-      parsedFilter.hidden = false;
-    }
+
     return ld.compactObject({
       order: (order || 'DESC').toUpperCase(),
       offset: offset && +offset || undefined,
@@ -44,7 +48,7 @@ function createRequest(req, ROUTE_NAME) {
   });
 }
 
-function createResponse(res) {
+function createResponse(res, subroute, type, idField) {
   return (answer, message) => {
     const { page, pages, cursor } = answer;
     const { order, filter, offset, limit, criteria: sortBy } = message;
@@ -58,7 +62,7 @@ function createResponse(res) {
 
     res.meta = { page, pages };
 
-    const base = config.host + config.files.attachPoint;
+    const base = config.host + config.payments.attachPoint + '/' + subroute;
     res.links = {
       self: `${base}?${qs(selfQS)}`,
     };
@@ -69,9 +73,11 @@ function createResponse(res) {
       res.links.next = `${base}?${qs(nextQS)}`;
     }
 
-    return Promise.resolve(answer.items);
+    return Promise.resolve(answer.items.map(item => {
+      return idField ? { id: item[idField], type, attributes: item } : { type, attributes: item };
+    }));
   };
 }
 
-module.exports.createRequest = createRequest;
-module.exports.createResponse = createResponse;
+exports.createRequest = createRequest;
+exports.createResponse = createResponse;

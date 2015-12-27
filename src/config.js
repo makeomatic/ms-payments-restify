@@ -29,6 +29,7 @@ const config = module.exports = {
       'saleList': 'sale.list',
     },
     timeouts: {},
+    attachPoint: 'payments',
   },
 };
 
