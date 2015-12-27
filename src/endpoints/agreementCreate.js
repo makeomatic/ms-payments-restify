@@ -81,14 +81,13 @@ exports.post = {
       return validator.validate('agreement.create', req.body)
         .then(body => {
           const agreement = body.data.attributes;
-          const dateFormat = 'YYYY-MM-DDTHH:MM:SSZ';
           const realDate = agreement.start_date && moment(agreement.start_date) || moment().add(1, 'minute');
           const message = {
             owner: req.user.id,
             agreement: {
               name: agreement.name,
               description: agreement.description,
-              start_date: realDate.format(dateFormat),
+              start_date: realDate.toISOString(),
               plan: {
                 id: agreement.plan,
               },
