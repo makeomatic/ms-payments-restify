@@ -30,6 +30,7 @@ const config = module.exports = {
     },
     timeouts: {
       agreementExecute: 25000,
+      agreementCreate: 25000,
     },
     attachPoint: 'payments',
   },
