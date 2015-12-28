@@ -7,7 +7,14 @@ const BLACK_LIST = ['reconfigure', 'getTimeout', 'getRoute'];
  * @type {Object}
  */
 const config = module.exports = {
-  users: {},
+  users: {
+    audience: '*.localhost',
+    prefix: 'users',
+    postfix: {
+      updateMetadata: 'updateMetadata',
+      getMetadata: 'getMetadata',
+    },
+  },
   payments: {
     prefix: 'payments',
     postfix: {
