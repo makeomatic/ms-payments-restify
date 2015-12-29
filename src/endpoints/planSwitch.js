@@ -93,7 +93,7 @@ function saveFreeMetadata(user, price, amqp) {
 
 const execute = Promise.coroutine(function* generateSwitch(req) {
   // validate body
-  const body = yield validator.validate('agreement.create', req.body).data.attributes;
+  const body = (yield validator.validate('agreement.create', req.body)).data.attributes;
   // get current user agreement, if user is not admin, force it to current user no matter what's passed
   // also set it to current user if it's empty
   if (!req.user.isAdmin() || body.user === null || body.user === undefined) {
