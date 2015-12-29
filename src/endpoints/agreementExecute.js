@@ -33,19 +33,16 @@ const Errors = require('common-errors');
  */
 exports.post = {
   path: '/agreements/:token/execute',
-  middleware: ['auth'],
   handlers: {
     '1.0.0': (req, res, next) => {
       const { token } = req.params;
-      if (token === null || token === undefined) {
+
+      if (!token) {
         return next(new Errors.ArgumentNullError('token'));
       }
-      const message = {
-        owner: req.user.id,
-        token
-      };
+
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), message, {timeout: getTimeout(ROUTE_NAME)})
+        .publishAndWait(getRoute(ROUTE_NAME), { token }, { timeout: getTimeout(ROUTE_NAME) })
         .then(() => {
           res.send(204);
         })
