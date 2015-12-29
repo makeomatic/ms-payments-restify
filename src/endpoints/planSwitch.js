@@ -97,8 +97,8 @@ const execute = Promise.coroutine(function* generateSwitch(req) {
 
   const agreementData = yield getCurrentAgreement(user, req.amqp);
   const planId = body.plan;
-  const { agreementId, currentPlanId } = agreementData;
 
+  const { agreement: agreementId, plan: currentPlanId } = agreementData;
   if (currentPlanId === planId) {
     throw new Errors.NotSupportedError('you cant change to the same agreement');
   }
