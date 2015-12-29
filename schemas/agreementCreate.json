@@ -7,14 +7,11 @@
       "type": "object",
       "required": ["type", "attributes"],
       "properties": {
-        "type": { "type": "string", "enum": ["agreement"] },
+        "type": { "type": "string", "constant": "agreement" },
         "attributes": {
           "type": "object",
-          "required": ["name", "plan"],
+          "required": ["plan"],
           "properties": {
-            "name": { "type": "string", "minLength": 1 },
-            "description": { "type": "string" },
-            "start_date": { "type": "string", "format": "date-time" },
             "plan": { "type": "string", "minLength": 1 }
           }
         }
