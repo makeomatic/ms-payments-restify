@@ -12,6 +12,7 @@ function getCurrentAgreement(user, amqp) {
     audience: config.users.audience,
   };
   return amqp.publishAndWait(path, getRequest, {timeout: 5000})
+    .get(getRequest.audience)
     .then((metadata) => {
       // if user is on free plan, return free
       if (metadata.plan === 'free') return 'free';
