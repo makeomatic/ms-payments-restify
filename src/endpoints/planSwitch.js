@@ -17,12 +17,11 @@ function getCurrentAgreement(user, amqp) {
   return amqp.publishAndWait(path, getRequest, { timeout: 5000 })
     .get(audience)
     .then(metadata => {
-      // if user is on free plan, return free
-      if (metadata.plan === 'free') {
-        return 'free';
+      if (!metadata.agreement) {
+        throw new Errors.NotSupportedError('Operation is not available on users not having agreement data.');
       }
 
-      return metadata.agreement || Promise.reject(new Errors.NotSupportedError('Operation is not available on users not having agreement data.'));
+      return metadata;
     });
 }
 
@@ -96,9 +95,10 @@ const execute = Promise.coroutine(function* generateSwitch(req) {
     user = req.user.id;
   }
 
-  const agreementId = yield getCurrentAgreement(user, req.amqp);
+  const { agreementId, currentPlanId } = yield getCurrentAgreement(user, req.amqp);
   const planId = body.plan;
-  if (agreementId === planId) {
+
+  if (currentPlanId === planId) {
     throw new Errors.NotSupportedError('you cant change to the same agreement');
   }
 
