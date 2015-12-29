@@ -1,15 +1,61 @@
 const moment = require('moment');
-
 const validator = require('../validator.js');
 const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementCreate';
-const jwtCookieOpts = {
-  path: config.payments.jwtPrefix || '/',
-  maxAge: 3600,
-  secure: process.env.NODE_ENV === 'production',
-  httpOnly: true,
-};
+
+function create(req, user) {
+  return function processBody(agreement) {
+    return req
+      .amqp.publishAndWait(getRoute('planGet'), agreement.plan, { timeout: getTimeout('planGet') })
+      .then(plan => {
+        const [subscription] = plan.subs;
+        const name = plan.plan.description;
+        const description = [
+          `${name} [${subscription.name}ly]`,
+          `Client ${req.user.id}`,
+          `Provides ${subscription.models} models ${subscription.name}ly and you can buy additional models for ${subscription.price} ${subscription.definition.amount.currency}`,
+        ].join('. ');
+        const startDate = moment().add(1, 'minute');
+
+        const message = {
+          owner: user || agreement.user,
+          agreement: {
+            name,
+            description,
+            start_date: startDate.format('YYYY-MM-DD[T]HH:mm:ss[Z]'),
+            plan: {
+              id: agreement.plan,
+            },
+            payer: {
+              payment_method: 'paypal',
+            },
+          },
+        };
+
+        return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) });
+      })
+      .then(result => {
+        return {
+          id: result.agreement.id,
+          type: 'agreement',
+          attributes: result.agreement,
+          links: {
+            approve: result.url,
+          },
+          meta: {
+            token: result.token,
+          },
+        };
+      });
+  };
+}
+
+/**
+ * @public
+ * @type {Function}
+ */
+exports.create = create;
 
 /**
  * @api {post} /agreements Create agreement
@@ -84,42 +130,12 @@ exports.post = {
   middleware: ['auth'],
   handlers: {
     '1.0.0': function agreementCreate(req, res, next) {
-      return validator.validate('agreement.create', req.body)
-        .then(body => {
-          const agreement = body.data.attributes;
-          const realDate = agreement.start_date && moment(agreement.start_date) || moment().add(1, 'minute');
-          const message = {
-            owner: req.user.id,
-            agreement: {
-              name: agreement.name,
-              description: agreement.description,
-              // fuck you paypal: 2015-02-19T00:37:04Z ?!
-              start_date: realDate.format('YYYY-MM-DD[T]HH:mm:ss[Z]'),
-              plan: {
-                id: agreement.plan,
-              },
-              payer: {
-                payment_method: 'paypal',
-              },
-            },
-          };
-
-          return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) });
-        })
-        .then(result => {
-          const response = {
-            id: result.agreement.id,
-            type: 'agreement',
-            attributes: result.agreement,
-            links: {
-              approve: result.url,
-            },
-            meta: {
-              token: result.token,
-            },
-          };
-
-          res.setCookie('jwt', req.user.jwt, { ...jwtCookieOpts, domain: req.host });
+      return validator
+        .validate('agreement.create', req.body)
+        .get('data')
+        .get('attributes')
+        .then(create(req, req.user.id))
+        .then(response => {
           res.send(201, response);
         })
         .asCallback(next);

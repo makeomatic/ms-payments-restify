@@ -4,6 +4,15 @@ const ROUTE_NAME = 'agreementExecute';
 const Errors = require('common-errors');
 
 /**
+ * @param  {AMQPTransport} amqp
+ * @param  {String} token
+ * @return {Promise}
+ */
+function execute(amqp, token) {
+  return amqp.publishAndWait(getRoute(ROUTE_NAME), { token }, { timeout: getTimeout(ROUTE_NAME) });
+}
+
+/**
  * @api {post} /agreements/:token/execute Execute agreement
  * @apiVersion 1.0.0
  * @apiName ExecuteAgreement
@@ -41,12 +50,17 @@ exports.post = {
         return next(new Errors.ArgumentNullError('token'));
       }
 
-      return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), { token }, { timeout: getTimeout(ROUTE_NAME) })
-        .then(() => {
-          res.send(204);
-        })
-        .asCallback(next);
+      return execute(req.amqp, token).then(() => {
+        res.send(204);
+      })
+      .asCallback(next);
     },
   },
 };
+
+/**
+ * Executes agreement with a passed token
+ * @public
+ * @type {Function}
+ */
+exports.execute = execute;
