@@ -4,6 +4,16 @@ const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'saleExecute';
 
+function execute(amqp, owner, data) {
+  const message = {
+    payment_id: data.payment_id,
+    payer_id: data.payer_id,
+    owner,
+  };
+
+  return amqp.publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) });
+}
+
 /**
  * @api {post} /sales/execute Execute sale
  * @apiVersion 1.0.0
@@ -35,9 +45,10 @@ const ROUTE_NAME = 'saleExecute';
  * @apiSuccess (Return) {Object} data.attributes Full sale object returned by PayPal (contains additional data).
  *
  * @apiExample {curl} Example usage:
- *   curl -i -X POST
- *     -H 'Accept-Version: *'
- *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
+ *   curl -i -X POST \
+ *     -H 'Accept-Version: *' \
+ *     -H 'Accept: application/vnd.api+json' \
+ *     -H 'Content-Type: application/vnd.api+json' \
  *     -H "Authorization: JWT therealtokenhere" \
  *     "https://api-sandbox.cappacity.matic.ninja/api/sales/execute/EC-0JP008296V451950C"
  *     -d '{ data: { type: "executionOrder", attributes: { "payment_id": "someid", "payer_id": "anotherid" } } }'
@@ -60,22 +71,21 @@ exports.post = {
   handlers: {
     '1.0.0': (req, res, next) => {
       return validator.validate('sale.execute', req.body)
-        .then((body) => {
-          const message = {
-            payment_id: body.attributes.payment_id,
-            payer_id: body.attributes.payer_id,
-            owner: body.attributes.owner || req.user.id,
-          };
-          return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, {timeout: getTimeout(ROUTE_NAME)});
+        .then(body => {
+          const owner = req.user.isAdmin() ? (body.attributes.owner || req.user.id) : req.user.id;
+          return execute(req.amqp, owner, body.attributes);
         })
-        .then((sale) => {
+        .then(sale => {
           const response = {
             type: 'sale',
             attributes: sale,
-          }
+          };
+
           res.send(200, response);
         })
         .asCallback(next);
     },
   },
 };
+
+exports.execute = execute;
