@@ -113,6 +113,7 @@ const execute = Promise.coroutine(function* generateSwitch(req) {
   }
 
   // and just write free plan metadata to user
+  // suspend agreement if id is not free
   yield cancelAgreement(agreementId, req.amqp);
   const freePlanData = yield getFreePlanData(req.amqp);
   yield saveFreeMetadata(user, freePlanData.price, req.amqp);

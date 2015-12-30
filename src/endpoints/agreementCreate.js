@@ -13,9 +13,8 @@ function create(req, user) {
         const name = plan.plan.description;
         const description = [
           `${name} [${subscription.name}ly]`,
-          `Client ${req.user.id}`,
-          `Provides ${subscription.models} models ${subscription.name}ly and you can buy additional models for ${subscription.price} ${subscription.definition.amount.currency}`,
-        ].join('. ');
+          `Provides ${subscription.models} models. Extra for ${subscription.price}${subscription.definition.amount.currency} per model`,
+        ].join('. ').slice(0, 127);
         const startDate = moment().add(1, 'minute');
 
         const message = {
