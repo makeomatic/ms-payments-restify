@@ -4,11 +4,10 @@ const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'saleExecute';
 
-function execute(amqp, owner, data) {
+function execute(amqp, data) {
   const message = {
     payment_id: data.payment_id,
     payer_id: data.payer_id,
-    owner,
   };
 
   return amqp.publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) });
@@ -19,7 +18,7 @@ function execute(amqp, owner, data) {
  * @apiVersion 1.0.0
  * @apiName ExecuteSale
  * @apiGroup Sales
- * @apiPermission UserPermission
+ * @apiPermission none
  *
  * @apiDescription Executes sale. Sale must be approved by used first.
  * To execute a sale you need Sale ID and Payer ID. Both are passed as query params "paymentId" and "PayerID"
@@ -27,10 +26,6 @@ function execute(amqp, owner, data) {
  * parameters that it gets from PayPal.
  * Important: The only way to get Payer ID is to get it from PayPal on return_url handler! Make sure that handler
  * saves data it received IMMEDIATELY, so in case of any failure you'll be able to re-attempt execution.
- *
- * @apiHeader (Authorization) {String} Authorization JWT :accessToken
- * @apiHeaderExample Authorization-Example:
- *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
  * @apiParam (Params) {Object} data Data container.
  * @apiParam (Params) {String} data.type Data type, must be 'executionOrder'.
@@ -67,13 +62,11 @@ function execute(amqp, owner, data) {
  */
 exports.post = {
   path: '/sales/execute',
-  middleware: ['auth'],
   handlers: {
     '1.0.0': (req, res, next) => {
       return validator.validate('sale.execute', req.body)
         .then(body => {
-          const owner = req.user.isAdmin() ? (body.attributes.owner || req.user.id) : req.user.id;
-          return execute(req.amqp, owner, body.attributes);
+          return execute(req.amqp, body.attributes);
         })
         .then(sale => {
           const response = {
