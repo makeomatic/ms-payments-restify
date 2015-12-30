@@ -20,7 +20,6 @@ function getCurrentAgreement(user, amqp) {
       if (!metadata.agreement) {
         throw new Errors.NotSupportedError('Operation is not available on users not having agreement data.');
       }
-
       return metadata;
     });
 }
