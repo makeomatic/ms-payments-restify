@@ -5,7 +5,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementState';
 
 /**
- * @api {post} /agreements/:id/state/:state Change agreement state
+ * @api {post} /agreements/:owner/state/:state Change agreement state for user
  * @apiVersion 1.0.0
  * @apiName AgreementChangeState
  * @apiGroup Agreements
@@ -20,7 +20,7 @@ const ROUTE_NAME = 'agreementState';
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {string} id Plan id.
+ * @apiParam (Params) {string} owner User to change status for, defaults to current user.
  * @apiParam (Params) {string} state One of these states: suspend, reactivate, cancel.
  *
  * @apiExample {curl} Example usage:
@@ -37,19 +37,17 @@ const ROUTE_NAME = 'agreementState';
  *   HTTP/1.1 204 No Content
  */
 exports.post = {
-  path: '/agreements/:id/state/:state',
+  path: '/agreements/:owner/state/:state',
   middleware: ['auth'],
   handlers: {
     '1.0.0': function agreementState(req, res, next) {
-      const { id, state } = req.params;
-      if (id === null || id === undefined) {
-        return next(new Errors.ArgumentNullError('id'));
-      }
+      const state = req.params.state;
+      const owner = req.params.owner || req.user.id;
       if (state === null || state === undefined) {
         return next(new Errors.ArgumentNullError('state'));
       }
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), { id, state }, {timeout: getTimeout(ROUTE_NAME)})
+        .publishAndWait(getRoute(ROUTE_NAME), { owner, state }, {timeout: getTimeout(ROUTE_NAME)})
         .then(() => {
           res.send(204);
         })
