@@ -1,4 +1,5 @@
-const ld = require('lodash');
+const merge = require('lodash/merge');
+const omit = require('lodash/omit');
 const users = require('ms-users-restify');
 const BLACK_LIST = ['reconfigure', 'getTimeout', 'getRoute'];
 
@@ -40,6 +41,7 @@ const config = module.exports = {
       agreementCreate: 25000,
     },
     attachPoint: 'payments',
+    serviceSecret: 'megasecret',
   },
 };
 
@@ -53,8 +55,8 @@ module.exports = exports = config;
  * Reconfigures instance
  */
 exports.reconfigure = function reconfigure(opts) {
-  ld.merge(config, ld.omit(opts, BLACK_LIST));
-  users.reconfigure(ld.omit(config, BLACK_LIST));
+  merge(config, omit(opts, BLACK_LIST));
+  users.reconfigure(omit(config, BLACK_LIST));
 };
 
 /**

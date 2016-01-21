@@ -1,7 +1,7 @@
 const Promise = require('bluebird');
-
+const mixins = require('mm-lodash');
 const ld = require('lodash').runInContext();
-ld.mixin(require('mm-lodash'));
+ld.mixin(mixins);
 
 const Errors = require('common-errors');
 const validator = require('./validator.js');
@@ -35,14 +35,14 @@ function createRequest(req, ROUTE_NAME) {
   })
   .catch(function validationError(err) {
     req.log.error('input error', err);
-    throw new Errors.ValidationError('query.filter and query.sortBy must be uri encoded, and query.filter must be a valid JSON object', 400);
+    throw new Errors.HttpStatusError(400, 'query.filter and query.sortBy must be uri encoded, and query.filter must be a valid JSON object'); // eslint-disable-line max-len
   })
   .then(function validateMessage(message) {
     return validator.validate('list', message);
   })
   .then(function askAMQP(message) {
     return Promise.join(
-      req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, {timeout: getTimeout(ROUTE_NAME)}),
+      req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) }),
       message
     );
   });
@@ -98,7 +98,7 @@ function createResponse(res, subroute, type, idField) {
       res.links.next = `${base}?${qs(nextQS)}`;
     }
 
-    const transform = typeof type === 'function' ? modelTransform(type) : dataTransform(type, idField);
+    const transform = typeof type === 'function' ? modelTransform(type) : dataTransform(type, idField); // eslint-disable-line max-len
     return Promise.resolve(answer.items.map(transform));
   };
 }
