@@ -4,9 +4,9 @@
   "additionalProperties": false,
   "required": ["data"],
   "properties": {
-    "additionalProperties": false,
     "data": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["id", "type", "attributes"],
       "properties": {
         "type": {
