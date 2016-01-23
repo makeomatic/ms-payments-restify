@@ -11,13 +11,15 @@ const { getRoute, getTimeout } = config;
 
 const { stringify: qs } = require('querystring');
 
+const USER_PROTECTED_ROUTES = ['agreementList', 'saleList', 'transactionList', 'transactionCommon'];
+
 function createRequest(req, ROUTE_NAME) {
   return Promise.try(function verifyRights() {
     const { order, filter, offset, limit, sortBy } = req.query;
     const parsedFilter = filter && JSON.parse(decodeURIComponent(filter)) || {};
 
     if (!req.user || !req.user.isAdmin()) {
-      if (ROUTE_NAME === 'agreementList' || ROUTE_NAME === 'saleList') {
+      if (USER_PROTECTED_ROUTES.indexOf(ROUTE_NAME) !== -1) {
         // user is always defined here as required by the right
         parsedFilter.owner = req.user.id;
       } else if (ROUTE_NAME === 'planList') {

@@ -1,8 +1,8 @@
-const ROUTE_NAME = 'transactionList';
+const ROUTE_NAME = 'transactionCommon';
 const { createRequest, createResponse } = require('../listUtils');
 
 /**
- * @api {get} /transactions List transactions
+ * @api {get} /transactions/common List common transactions
  * @apiVersion 1.0.0
  * @apiName ListTransactions
  * @apiGroup Transactions
@@ -16,8 +16,10 @@ const { createRequest, createResponse } = require('../listUtils');
  *
  * @apiParam (Query) {Number{0..}} [offset]         how many objects to skip
  * @apiParam (Query) {Number{1..100}} [limit]       how many objects to return per page
- * @apiParam (Query) {String} [filter]              `encodeURIComponent(JSON.stringify(filterObject))`, pass it as value.
- * @apiParam (Query) {String} [sortBy]              `encodeURIComponent(sortBy)`
+ * @apiParam (Query) {String} [filter] `encodeURIComponent(JSON.stringify(filterObject))`, pass it as value.
+ * @apiParam (Query) {String} [sortBy] `encodeURIComponent(sortBy)`
+ * @apiParam (Query) {String} [owner] `encodeURIComponent(owner)`
+ * @apiParam (Query) {String="sale","subscription"} [type] transaction types to return
  * @apiParam (Query) {String="ASC","DESC"} [order]  sorting order, defaults to "ASC", case-insensitive
  *
  * @apiSuccess (Code 200) {Object}   meta              response meta information
@@ -75,7 +77,10 @@ exports.get = {
     '1.0.0': function createPlan(req, res, next) {
       return createRequest(req, ROUTE_NAME)
         .spread(createResponse(res, 'transactions', 'transaction', 'id'))
-        .then((plans) => { res.send(plans); })
+        .then(plans => {
+          res.send(plans);
+          return false;
+        })
         .asCallback(next);
     },
   },

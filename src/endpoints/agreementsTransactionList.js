@@ -1,8 +1,8 @@
-const ROUTE_NAME = 'transactionCommon';
+const ROUTE_NAME = 'transactionList';
 const { createRequest, createResponse } = require('../listUtils');
 
 /**
- * @api {get} /transactions/common List common transactions
+ * @api {get} /transactions List transactions
  * @apiVersion 1.0.0
  * @apiName ListTransactions
  * @apiGroup Transactions
@@ -14,11 +14,12 @@ const { createRequest, createResponse } = require('../listUtils');
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Query) {Number{0..}} [offset]         how many objects to skip
- * @apiParam (Query) {Number{1..100}} [limit]       how many objects to return per page
- * @apiParam (Query) {String} [filter]              `encodeURIComponent(JSON.stringify(filterObject))`, pass it as value.
- * @apiParam (Query) {String} [sortBy]              `encodeURIComponent(sortBy)`
- * @apiParam (Query) {String="ASC","DESC"} [order]  sorting order, defaults to "ASC", case-insensitive
+ * @apiParam (Query) {Number{0..}} [offset] how many objects to skip
+ * @apiParam (Query) {Number{1..100}} [limit] how many objects to return per page
+ * @apiParam (Query) {String} [filter] `encodeURIComponent(JSON.stringify(filterObject))`, pass it as value.
+ * @apiParam (Query) {String} [sortBy] `encodeURIComponent(sortBy)`
+ * @apiParam (Query) {String} [owner] `encodeURIComponent(owner)`
+ * @apiParam (Query) {String="ASC","DESC"} [order] sorting order, defaults to "ASC", case-insensitive
  *
  * @apiSuccess (Code 200) {Object}   meta              response meta information
  * @apiSuccess (Code 200) {String}   meta.id           request id
@@ -40,7 +41,7 @@ const { createRequest, createResponse } = require('../listUtils');
  *     -H 'Accept-Version: *'
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/transactions"
+ *     "https://api-sandbox.cappacity.matic.ninja/api/payments/agreements/transactions"
  *
  * @apiUse UserAuthResponse
  * @apiUse ValidationError
@@ -60,22 +61,25 @@ const { createRequest, createResponse } = require('../listUtils');
  * 					...
  * 				},
  * 				"links": {
- * 					"self": "https://localhost:443/api/transactions/PP-10200414C5"
+ * 					"self": "https://localhost:443/api/payments/agreements/transactions?cursor=81&limit=10"
  * 				}
  * 			}],
  * 			"links": {
- * 				"self": "https://localhost:443/api/transactions?cursor=91&limit=10"
+ * 				"self": "https://localhost:443/api/payments/transactions?cursor=91&limit=10"
  * 			}
  * 		}
  */
 exports.get = {
-  path: '/transactions/common',
+  path: '/agreements/transactions',
   middleware: ['auth'],
   handlers: {
     '1.0.0': function createPlan(req, res, next) {
       return createRequest(req, ROUTE_NAME)
         .spread(createResponse(res, 'transactions', 'transaction', 'id'))
-        .then((plans) => { res.send(plans); })
+        .then(plans => {
+          res.send(plans);
+          return false;
+        })
         .asCallback(next);
     },
   },

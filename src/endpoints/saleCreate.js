@@ -1,5 +1,4 @@
 const validator = require('../validator.js');
-
 const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'saleCreate';
@@ -67,7 +66,7 @@ exports.post = {
   path: '/sales',
   middleware: ['auth'],
   handlers: {
-    '1.0.0': (req, res, next) => {
+    '1.0.0': function createSale(req, res, next) {
       return validator.validate('sale.create', req.body)
         .then((body) => {
           let user;
@@ -80,9 +79,9 @@ exports.post = {
             owner: user,
             amount: body.data.attributes.amount,
           };
-          return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, {timeout: getTimeout(ROUTE_NAME)});
+          return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) });
         })
-        .then((result) => {
+        .then(result => {
           const response = {
             id: result.sale.id,
             type: 'sale',

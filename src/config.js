@@ -32,9 +32,11 @@ const config = module.exports = {
       agreementState: 'agreement.state',
       transactionList: 'transaction.list',
       transactionSync: 'transaction.sync',
+      transactionCommon: 'transaction.common',
       saleCreate: 'sale.create',
       saleExecute: 'sale.execute',
       saleList: 'sale.list',
+      saleSycn: 'sale.sync',
     },
     timeouts: {
       agreementExecute: 25000,

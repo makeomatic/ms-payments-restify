@@ -1,23 +1,23 @@
 {
-  "id": "transaction.sync",
+  "id": "sale.sync",
   "type": "object",
+  "additionalProperties": false,
   "required": ["data"],
   "properties": {
+    "additionalProperties": false,
     "data": {
       "type": "object",
       "required": ["id", "type", "attributes"],
       "properties": {
         "type": {
           "type": "string",
-          "constant": "agreement"
+          "constant": "sale"
         },
         "attributes": {
           "type": "object",
-          "required": ["id"],
+          "additionalProperties": false,
           "properties": {
-            "id": { "type": "string", "minLength": 1 },
-            "start": { "type": "string", "format": "date-time" },
-            "end": { "type": "string", "format": "date-time" }
+            "next_id": { "type": "string", "minLength": 1 }
           }
         }
       }

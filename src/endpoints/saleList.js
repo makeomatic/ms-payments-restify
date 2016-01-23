@@ -8,16 +8,18 @@ const { createRequest, createResponse } = require('../listUtils');
  * @apiGroup Sales
  * @apiPermission UserPermission
  *
- * @apiDescription Returns array of sale objects.
+ * @apiDescription Returns array of sale objects. Non-admin users can only get sale's data
+ * for authenticated user
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Query) {Number{0..}} [offset]         how many objects to skip
- * @apiParam (Query) {Number{1..100}} [limit]       how many objects to return per page
- * @apiParam (Query) {String} [filter]              `encodeURIComponent(JSON.stringify(filterObject))`, pass it as value.
- * @apiParam (Query) {String} [sortBy]              `encodeURIComponent(sortBy)`
+ * @apiParam (Query) {Number{0..}} [offset] how many objects to skip
+ * @apiParam (Query) {Number{1..100}} [limit] how many objects to return per page
+ * @apiParam (Query) {String} [filter] `encodeURIComponent(JSON.stringify(filterObject))`, pass it as value.
+ * @apiParam (Query) {String} [sortBy] `encodeURIComponent(sortBy)`
+ * @apiParam (Query) {String} [owner] `encodeURIComponent(owner)`
  * @apiParam (Query) {String="ASC","DESC"} [order]  sorting order, defaults to "ASC", case-insensitive
  *
  * @apiSuccess (Code 200) {Object}   meta              response meta information
@@ -60,11 +62,11 @@ const { createRequest, createResponse } = require('../listUtils');
  * 					...
  * 				},
  * 				"links": {
- * 					"self": "https://localhost:443/api/sales/PP-10200414C5"
+ * 					"self": "https://localhost:443/api/payments/sales?cursor=81&limit=10"
  * 				}
  * 			}],
  * 			"links": {
- * 				"self": "https://localhost:443/api/sales?cursor=91&limit=10"
+ * 				"self": "https://localhost:443/api/payments/sales?cursor=91&limit=10"
  * 			}
  * 		}
  */
@@ -72,10 +74,13 @@ exports.get = {
   path: '/sales',
   middleware: ['auth'],
   handlers: {
-    '1.0.0': (req, res, next) => {
+    '1.0.0': function saleList(req, res, next) {
       return createRequest(req, ROUTE_NAME)
         .spread(createResponse(res, 'sales', 'sale', 'id'))
-        .then((sales) => { res.send(200, sales); })
+        .then(sales => {
+          res.send(200, sales);
+          return false;
+        })
         .asCallback(next);
     },
   },
