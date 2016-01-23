@@ -74,7 +74,7 @@ exports.get = {
   path: '/transactions',
   middleware: ['auth'],
   handlers: {
-    '1.0.0': function createPlan(req, res, next) {
+    '1.0.0': function transactionList(req, res, next) {
       return createRequest(req, ROUTE_NAME)
         .spread(createResponse(res, 'transactions', 'transaction', 'id'))
         .then(plans => {

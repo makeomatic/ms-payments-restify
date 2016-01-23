@@ -2,7 +2,7 @@ const ROUTE_NAME = 'transactionList';
 const { createRequest, createResponse } = require('../listUtils');
 
 /**
- * @api {get} /transactions List transactions
+ * @api {get} /agreements/transactions List transactions
  * @apiVersion 1.0.0
  * @apiName ListTransactions
  * @apiGroup Transactions
