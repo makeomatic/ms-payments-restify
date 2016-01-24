@@ -36,7 +36,8 @@ const config = module.exports = {
       saleCreate: 'sale.create',
       saleExecute: 'sale.execute',
       saleList: 'sale.list',
-      saleSycn: 'sale.sync',
+      saleSync: 'sale.sync',
+      saleGet: 'sale.get',
     },
     timeouts: {
       agreementExecute: 25000,

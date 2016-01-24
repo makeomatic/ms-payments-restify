@@ -54,7 +54,7 @@ const ROUTE_NAME = 'saleCreate';
  *      type: 'sale',
  *      attributes: {...},
  *      links: {
- *        approve: 'https://api.paypal.com/v1/payments//cgi-bin/webscr?cmd=_express-checkout&token=EC-60385559L1062554J'
+ *        approve: 'https://api.paypal.com/v1/payments/cgi-bin/webscr?cmd=_express-checkout&token=EC-60385559L1062554J'
  *      },
  *      meta: {
  *        token: 'EC-60385559L1062554J'
@@ -68,7 +68,7 @@ exports.post = {
   handlers: {
     '1.0.0': function createSale(req, res, next) {
       return validator.validate('sale.create', req.body)
-        .then((body) => {
+        .then(body => {
           let user;
           if (user === null || user === undefined || !req.user.isAdmin()) {
             user = req.user.id;
