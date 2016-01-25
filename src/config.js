@@ -31,6 +31,8 @@ const config = module.exports = {
       agreementBill: 'agreement.bill',
       agreementState: 'agreement.state',
       agreementSync: 'agreement.sync',
+      agreementGet: 'agreement.get',
+      transactionGet: 'transaction.get',
       transactionList: 'transaction.list',
       transactionSync: 'transaction.sync',
       transactionCommon: 'transaction.common',

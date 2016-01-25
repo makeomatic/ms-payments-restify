@@ -1,12 +1,12 @@
-const ROUTE_NAME = 'transactionCommon';
+const ROUTE_NAME = 'agreementGet';
 const config = require('../config.js');
-const { createRequest, createResponse } = require('../listUtils');
+const { getRoute, getTimeout } = config;
 
 /**
- * @api {get} /transactions/common List common transactions
+ * @api {get} /agreements/:id List common transactions
  * @apiVersion 1.0.0
- * @apiName ListTransactions
- * @apiGroup Transactions
+ * @apiName GetAgreement
+ * @apiGroup Agreements
  * @apiPermission UserPermission
  *
  * @apiDescription Allows user to see their transactions or admin to see all transactions in system.
@@ -14,14 +14,6 @@ const { createRequest, createResponse } = require('../listUtils');
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
- *
- * @apiParam (Query) {Number{0..}} [offset]         how many objects to skip
- * @apiParam (Query) {Number{1..100}} [limit]       how many objects to return per page
- * @apiParam (Query) {String} [filter] `encodeURIComponent(JSON.stringify(filterObject))`, pass it as value.
- * @apiParam (Query) {String} [sortBy] `encodeURIComponent(sortBy)`
- * @apiParam (Query) {String} [owner] `encodeURIComponent(owner)`
- * @apiParam (Query) {String="sale","subscription"} [type] transaction types to return
- * @apiParam (Query) {String="ASC","DESC"} [order]  sorting order, defaults to "ASC", case-insensitive
  *
  * @apiSuccess (Code 200) {Object}   meta              response meta information
  * @apiSuccess (Code 200) {String}   meta.id           request id
@@ -43,43 +35,28 @@ const { createRequest, createResponse } = require('../listUtils');
  *     -H 'Accept-Version: *'
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/transactions"
+ *     "https://api-sandbox.cappacity.matic.ninja/api/agreements/get/I-dsajdkasgdjhasg1234187"
  *
  * @apiUse UserAuthResponse
  * @apiUse ValidationError
  *
- * @apiSuccessExample {json} Success:
- *   HTTP/1.1 200 OK
- * 		{
- * 			"meta": {
- * 				"id": "request-id",
- * 				"page": 10,
- * 				"pages": 10
- * 			},
- * 			"data": [{
- * 				"type": "sale",
- * 				"id": "PP-10200414C5",
- * 				"attributes": {
- * 					...
- * 				},
- * 				"links": {
- * 					"self": "https://localhost:443/api/payments/transactions/PP-10200414C5"
- * 				}
- * 			}],
- * 			"links": {
- * 				"self": "https://localhost:443/api/payments/transactions?cursor=91&limit=10"
- * 			}
- * 		}
  */
 exports.get = {
-  path: '/transactions',
+  path: '/agreements/:id',
   middleware: ['auth'],
   handlers: {
     '1.0.0': function transactionList(req, res, next) {
-      return createRequest(req, ROUTE_NAME)
-        .spread(createResponse(res, 'transactions', config.models.Transaction, 'id'))
-        .then(transactions => {
-          res.send(200, transactions);
+      const id = req.params.id;
+
+      if (id === 'transactions') {
+        return next('payments.agreementsTransactionList.get');
+      }
+
+      const message = { id, owner: req.user.id };
+      return req.amqp
+        .publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) })
+        .then(agreement => {
+          res.send(200, config.models.Agreement.transform(agreement, true));
           return false;
         })
         .asCallback(next);

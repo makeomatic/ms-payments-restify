@@ -1,4 +1,5 @@
 const ROUTE_NAME = 'agreementList';
+const config = require('../config.js');
 const { createRequest, createResponse } = require('../listUtils');
 
 /**
@@ -73,10 +74,13 @@ exports.get = {
   path: '/agreements',
   middleware: ['auth', 'admin'],
   handlers: {
-    '1.0.0': (req, res, next) => {
+    '1.0.0': function listAgreements(req, res, next) {
       return createRequest(req, ROUTE_NAME)
-        .spread(createResponse(res, 'agreements', 'agreement', 'id'))
-        .then((plans) => { res.send(plans); })
+        .spread(createResponse(res, 'agreements', config.models.Agreement, 'agreement.id'))
+        .then(agreements => {
+          res.send(200, agreements);
+          return false;
+        })
         .asCallback(next);
     },
   },
