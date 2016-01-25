@@ -89,7 +89,7 @@ function createResponse(res, subroute, type, idField, isAdmin) {
 
     res.meta = { page, pages };
 
-    const base = `${config.host}.${config.payments.attachPoint}/${subroute}`;
+    const base = `${config.host}${config.payments.attachPoint}/${subroute}`;
     res.links = {
       self: `${base}?${qs(selfQS)}`,
     };
