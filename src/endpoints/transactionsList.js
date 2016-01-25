@@ -1,4 +1,5 @@
 const ROUTE_NAME = 'transactionCommon';
+const config = require('../config.js');
 const { createRequest, createResponse } = require('../listUtils');
 
 /**
@@ -76,9 +77,9 @@ exports.get = {
   handlers: {
     '1.0.0': function transactionList(req, res, next) {
       return createRequest(req, ROUTE_NAME)
-        .spread(createResponse(res, 'transactions', 'transaction', 'id'))
-        .then(plans => {
-          res.send(plans);
+        .spread(createResponse(res, 'transactions', config.models.Transaction, 'id'))
+        .then(transactions => {
+          res.send(200, transactions);
           return false;
         })
         .asCallback(next);

@@ -1,4 +1,3 @@
-const moment = require('moment');
 const validator = require('../validator.js');
 const config = require('../config.js');
 const { getRoute, getTimeout } = config;
@@ -12,17 +11,15 @@ function create(req, user) {
         const [subscription] = plan.subs;
         const name = plan.plan.description;
         const description = [
-          `${name} [${subscription.name}ly]`,
+          `${subscription.name} ${name}`,
           `Provides ${subscription.models} models. Extra for ${subscription.price}${subscription.definition.amount.currency} per model`,
         ].join('. ').slice(0, 127);
-        const startDate = moment().add(1, 'minute');
 
         const message = {
           owner: user || agreement.user,
           agreement: {
             name,
             description,
-            start_date: startDate.format('YYYY-MM-DD[T]HH:mm:ss[Z]'),
             plan: {
               id: agreement.plan,
             },
@@ -34,19 +31,17 @@ function create(req, user) {
 
         return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) });
       })
-      .then(result => {
-        return {
-          id: result.agreement.id,
-          type: 'agreement',
-          attributes: result.agreement,
-          links: {
-            approve: result.url,
-          },
-          meta: {
-            token: result.token,
-          },
-        };
-      });
+      .then(result => ({
+        id: result.agreement.id,
+        type: 'agreement',
+        attributes: result.agreement,
+        links: {
+          approve: result.url,
+        },
+        meta: {
+          token: result.token,
+        },
+      }));
   };
 }
 
@@ -92,7 +87,7 @@ exports.create = create;
  *   curl -i -X POST -H 'Accept-Version: *' \
  *    -H 'Accept: application/vnd.api+json' \
  *    -H 'Content-Type: application/vnd.api+json' \
- *    -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InZAbWFrZW9tYXRpYy5ydSIsImNzIjoiNTQ3N2UzZDc3ODAwMDAwMCIsImlhdCI6MTQ1MTE1NDY5MywiYXVkIjoiKi5sb2NhbGhvc3QiLCJpc3MiOiJtcy11c2VycyJ9.EJ7DF9R7hF4tRffZgD_zq24WS3V_EB7Iz0o2DQ3uHd8" \
+ *    -H "Authorization: JWT realjwtroken" \
  *    "https://api-sandbox.cappasity.matic.ninja/api/payments/agreements" -d '{
  *    	"data": {
  *    		"type": "agreement",

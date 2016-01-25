@@ -5,16 +5,16 @@ const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const moment = require('moment');
 const agreementCreate = require('./agreementCreate.js').create;
+const getMetadataPath = `${config.users.prefix}.${config.users.postfix.getMetadata}`;
 
 function getCurrentAgreement(user, amqp) {
-  const path = config.users.prefix + '.' + config.users.postfix.getMetadata;
   const audience = config.users.audience;
   const getRequest = {
     username: user,
     audience,
   };
 
-  return amqp.publishAndWait(path, getRequest, { timeout: 5000 })
+  return amqp.publishAndWait(getMetadataPath, getRequest, { timeout: 5000 })
     .get(audience)
     .then(metadata => {
       if (!metadata.agreement) {
@@ -22,17 +22,6 @@ function getCurrentAgreement(user, amqp) {
       }
       return metadata;
     });
-}
-
-function suspendAgreement(id, amqp) {
-  const path = getRoute('agreementState');
-  const message = {
-    id,
-    state: 'suspend',
-    note: 'Suspending agreement by user request to switch plan',
-  };
-  // will return true only if promise succeeds
-  return amqp.publishAndWait(path, message, { timeout: getTimeout('agreementState') });
 }
 
 function cancelAgreement(id, amqp) {
@@ -53,18 +42,15 @@ function createNewAgreement(req, body, user) {
 function getFreePlanData(amqp) {
   return amqp
     .publishAndWait(getRoute('planGet'), 'free', { timeout: getTimeout('planGet') })
-    .then(plan => {
-      return {
-        plan,
-        price: plan.subs[0].price,
-      };
-    });
+    .then(plan => ({
+      plan,
+      price: plan.subs[0].price,
+    }));
 }
 
 function saveFreeMetadata(user, price, amqp) {
   const period = 'month';
   const nextCycle = moment().add(1, period).format();
-  const path = config.users.prefix + '.' + config.users.postfix.updateMetadata;
 
   const updateRequest = {
     username: user,
@@ -79,12 +65,12 @@ function saveFreeMetadata(user, price, amqp) {
     },
   };
 
-  return amqp.publishAndWait(path, updateRequest, { timeout: 5000 });
+  return amqp.publishAndWait(getMetadataPath, updateRequest, { timeout: 5000 });
 }
 
 const execute = Promise.coroutine(function* generateSwitch(req) {
   // validate body
-  const input = yield validator.validate('agreement.create', req.body);
+  const input = yield validator.validate('plan.switch', req.body);
   const body = input.data.attributes;
 
   // get current user agreement, if user is not admin, force it to current user no matter what's passed
@@ -97,24 +83,19 @@ const execute = Promise.coroutine(function* generateSwitch(req) {
   const agreementData = yield getCurrentAgreement(user, req.amqp);
   const planId = body.plan;
 
-  const { agreement: agreementId, plan: currentPlanId } = agreementData;
+  const { agreement: currentAgreementId, plan: currentPlanId } = agreementData;
   if (currentPlanId === planId) {
     throw new Errors.NotSupportedError('you cant change to the same agreement');
   }
 
-  if (agreementId === 'free') {
-    return yield createNewAgreement(req, body, user);
-  }
-
-  if (planId !== 'free') {
-    // suspend agreement if id is not free
-    yield suspendAgreement(agreementId, req.amqp);
+  if (currentAgreementId === 'free' || planId !== 'free') {
+    // paid agreements will be automatically cancelled
     return yield createNewAgreement(req, body, user);
   }
 
   // and just write free plan metadata to user
-  // suspend agreement if id is not free
-  yield cancelAgreement(agreementId, req.amqp);
+  // cancel agreement when switching to free
+  yield cancelAgreement(currentAgreementId, user, req.amqp);
   const freePlanData = yield getFreePlanData(req.amqp);
   yield saveFreeMetadata(user, freePlanData.price, req.amqp);
 
@@ -145,9 +126,9 @@ const execute = Promise.coroutine(function* generateSwitch(req) {
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
  * @apiParam (Params) {Object}  data Data container.
- * @apiParam (Params) {String}  data.type Data type, must be 'switch'.
+ * @apiParam (Params) {String="switch"}  data.type Data type, must be 'switch'.
  * @apiParam (Params) {Object}  data.attributes Details.
- * @apiParam (Params) {String} [data.attributes.user] User id, by default uses current user. If user is not admin, overwrites any value with current user.
+ * @apiParam (Params) {String} [data.attributes.user] If current user is not admin, overwrites any value with current user.
  * @apiParam (Params) {String}  data.attributes.plan Plan id, required.
  *
  * @apiExample {curl} Example usage:
@@ -157,6 +138,7 @@ const execute = Promise.coroutine(function* generateSwitch(req) {
  *     -H "Authorization: JWT therealtokenhere" \
  *     "https://api-sandbox.cappacity.matic.ninja/api/payments/plans/switch" -d '{
  *     		"data": {
+ *     		  "type": "switch",
  *     			"attributes": {
  *        		"plan": "id of plan"
  *     			}

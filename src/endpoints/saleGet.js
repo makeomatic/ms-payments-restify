@@ -70,18 +70,19 @@ exports.get = {
   middleware: ['auth'],
   handlers: {
     '1.0.0': function saleGet(req, res, next) {
+      const isAdmin = req.user.isAdmin();
       const message = {
         id: req.params.id,
       };
 
-      if (!req.user.isAdmin()) {
+      if (!isAdmin) {
         message.owner = req.user.id;
       }
 
       return req.amqp
         .publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) })
         .then(sale => {
-          res.send(config.models.Sale.transform(sale, true));
+          res.send(config.models.Sale.transform(sale, true, isAdmin));
           return false;
         })
         .asCallback(next);

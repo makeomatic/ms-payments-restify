@@ -50,9 +50,9 @@ function createRequest(req, ROUTE_NAME) {
   });
 }
 
-function modelTransform(model) {
+function modelTransform(model, isAdmin) {
   return function transform(item) {
-    return model.transform(item, true);
+    return model.transform(item, true, isAdmin);
   };
 }
 
@@ -60,7 +60,7 @@ function dataTransform(type, idField) {
   if (idField) {
     return function transform(item) {
       return {
-        id: item[idField],
+        id: ld.get(item, idField),
         type,
         attributes: item,
       };
@@ -75,7 +75,7 @@ function dataTransform(type, idField) {
   };
 }
 
-function createResponse(res, subroute, type, idField) {
+function createResponse(res, subroute, type, idField, isAdmin) {
   return (answer, message) => {
     const { page, pages, cursor } = answer;
     const { order, filter, offset, limit, criteria: sortBy } = message;
@@ -89,7 +89,7 @@ function createResponse(res, subroute, type, idField) {
 
     res.meta = { page, pages };
 
-    const base = config.host + config.payments.attachPoint + '/' + subroute;
+    const base = `${config.host}.${config.payments.attachPoint}/${subroute}`;
     res.links = {
       self: `${base}?${qs(selfQS)}`,
     };
@@ -100,7 +100,7 @@ function createResponse(res, subroute, type, idField) {
       res.links.next = `${base}?${qs(nextQS)}`;
     }
 
-    const transform = typeof type === 'function' ? modelTransform(type) : dataTransform(type, idField); // eslint-disable-line max-len
+    const transform = typeof type === 'function' ? modelTransform(type, isAdmin) : dataTransform(type, idField); // eslint-disable-line max-len
     return Promise.resolve(answer.items.map(transform));
   };
 }

@@ -1,4 +1,5 @@
 const ROUTE_NAME = 'saleList';
+const config = require('../config.js');
 const { createRequest, createResponse } = require('../listUtils');
 
 /**
@@ -76,7 +77,7 @@ exports.get = {
   handlers: {
     '1.0.0': function saleList(req, res, next) {
       return createRequest(req, ROUTE_NAME)
-        .spread(createResponse(res, 'sales', 'sale', 'id'))
+        .spread(createResponse(res, 'sales', config.models.Sale, 'sale.id', req.user.isAdmin()))
         .then(sales => {
           res.send(200, sales);
           return false;

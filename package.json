@@ -27,7 +27,8 @@
     "jsonwebtoken": "^5.5.4",
     "lodash": "^4.0.0",
     "mm-lodash": "^1.2.5",
-    "moment": "^2.11.1"
+    "moment": "^2.11.1",
+    "moment-timezone": "^0.5.0"
   },
   "peerDependencies": {
     "ms-users-restify": "~0.x.x",
