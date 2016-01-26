@@ -34,7 +34,7 @@ const { createRequest, createResponse } = require('../listUtils');
  * @apiSuccess (Code 200) {Object}   data.attributes   transactions attributes
  * @apiSuccess (Code 200) {String}   data.attributes.id mirrors `data.id`
  * @apiSuccess (Code 200) {Number}   data.attributes.type - `0` - recurring related payment, `1` - one time sale
- * @apiSuccess (Code 200) {String|Null} data.attributes.owner - either a `username` or `null` when failed to determine
+ * @apiSuccess (Code 200) {String}   data.attributes.owner - either a `username` or `null` when failed to determine
  * @apiSuccess (Code 200) {String}   data.attributes.payer - paypal email
  * @apiSuccess (Code 200) {Number}   data.attributes.date - date of the transaction, timestamp in `ms`
  * @apiSuccess (Code 200) {Number}   data.attributes.update_time - similar as date, usually the same
