@@ -27,9 +27,10 @@ const { createRequest, createResponse } = require('../listUtils');
  * @apiSuccess (Code 200) {Number}   meta.pages        total number of pages
  * @apiSuccess (Code 200) {Number}   meta.cursor       set as offset for the next page
  * @apiSuccess (Code 200) {Object[]} data              response data
- * @apiSuccess (Code 200) {String}   data.type         response data type - always `user`
+ * @apiSuccess (Code 200) {String}   data.type         response data type - always `agreement`
  * @apiSuccess (Code 200) {String}   data.id           agreement id, NOT the token, token is available in attributes
- * @apiSuccess (Code 200) {Object}   data.attributes   agreement attributes
+ * @apiSuccess (Code 200) {Object}   data.attributes   agreement attributes, reference:
+ * 	https://github.com/makeomatic/restify-utils/blob/master/schemas/Agreement.json
  * @apiSuccess (Code 200) {Object}   data.links        agreement links
  * @apiSuccess (Code 200) {String}   data.links.self   link to the current resource
  * @apiSuccess (Code 200) {String}   links             links
@@ -37,11 +38,11 @@ const { createRequest, createResponse } = require('../listUtils');
  * @apiSuccess (Code 200) {String}   links.next        link to the next page
  *
  * @apiExample {curl} Example usage:
- *   curl -i -X GET
- *     -H 'Accept-Version: *'
+ *   curl -i -X GET \
+ *     -H 'Accept-Version: *' \
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/agreements"
+ *     "https://api-sandbox.cappacity.matic.ninja/api/payments/agreements"
  *
  * @apiUse ValidationError
  * @apiUse UnauthorizedError

@@ -27,13 +27,13 @@ const ROUTE_NAME = 'planCreate';
  * @apiParam (Params) {String}  data.attributes.alias Plan alias, e.g. 'professional' for internal use, required.
  * @apiParam (Params) {String}  data.attributes.name Name for a plan to be displayed in admin panel and for users, required.
  * @apiParam (Params) {String}  data.attributes.description Optional description.
- * @apiParam (Params) {String}  data.attributes.subscriptions Subscriptions options.
- * @apiParam (Params) {String}  data.attributes.subscriptions.monthly Monthly options.
+ * @apiParam (Params) {Object}  data.attributes.subscriptions Subscriptions options.
+ * @apiParam (Params) {Object}  data.attributes.subscriptions.monthly Monthly options.
  * @apiParam (Params) {String}  data.attributes.subscriptions.monthly.price Subscription price.
  * @apiParam (Params) {String}  data.attributes.subscriptions.monthly.models Amount of models for this subscription.
  * @apiParam (Params) {String}  data.attributes.subscriptions.monthly.model_price How much additional model cost.
  * @apiParam (Params) {String}  data.attributes.subscriptions.yearly Yearly options.
- * @apiParam (Params) {String}  data.attributes.subscriptions.yearly.price Subscription price.
+ * @apiParam (Params) {Object}  data.attributes.subscriptions.yearly.price Subscription price.
  * @apiParam (Params) {String}  data.attributes.subscriptions.yearly.models Amount of models for this subscription.
  * @apiParam (Params) {String}  data.attributes.subscriptions.yearly.model_price How much additional model cost.
  *
@@ -72,9 +72,10 @@ exports.post = {
   path: '/plans',
   middleware: ['auth', 'admin'],
   handlers: {
-    '1.0.0': (req, res, next) => {
-      return validator.validate('plan.create', req.body)
-        .then((body) => {
+    '1.0.0': function createPlan(req, res, next) {
+      return validator
+        .validate('plan.create', req.body)
+        .then(body => {
           const plan = body.data.attributes;
 
           const monthly = {

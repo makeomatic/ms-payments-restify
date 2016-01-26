@@ -55,7 +55,12 @@ exports.get = {
   handlers: {
     '1.0.0': function transactionList(req, res, next) {
       const id = req.params.id;
-      const message = { id, owner: req.user.id };
+      const message = { id };
+
+      if (!req.user.isAdmin()) {
+        message.owner = req.user.id;
+      }
+
       return req.amqp
         .publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) })
         .then(transaction => {

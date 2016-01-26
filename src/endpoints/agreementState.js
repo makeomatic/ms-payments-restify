@@ -1,5 +1,3 @@
-const Errors = require('common-errors');
-
 const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementState';
@@ -9,7 +7,7 @@ const ROUTE_NAME = 'agreementState';
  * @apiVersion 1.0.0
  * @apiName AgreementChangeState
  * @apiGroup Agreements
- * @apiPermission UserPermission
+ * @apiPermission AdminPermission
  *
  * @apiDescription
  * Suspend temporarily disables agreement,
@@ -20,7 +18,7 @@ const ROUTE_NAME = 'agreementState';
  * @apiHeaderExample Authorization-Example:
  *   "Authorization: JWT myreallyniceandvalidjsonwebtoken"
  *
- * @apiParam (Params) {string} owner User to change status for, defaults to current user.
+ * @apiParam (Params) {string} owner User to change status for
  * @apiParam (Params) {string} state One of these states: suspend, reactivate, cancel.
  *
  * @apiExample {curl} Example usage:
@@ -28,7 +26,7 @@ const ROUTE_NAME = 'agreementState';
  *     -H 'Accept-Version: *'
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/agreements/EC-0JP008296V451950C/state/suspend"
+ *     "https://api-sandbox.cappacity.matic.ninja/api/payments/agreements/username@example.com/state/suspend"
  *
  * @apiUse ValidationError
  * @apiUse UnauthorizedError
@@ -38,16 +36,14 @@ const ROUTE_NAME = 'agreementState';
  */
 exports.post = {
   path: '/agreements/:owner/state/:state',
-  middleware: ['auth'],
+  middleware: ['auth', 'admin'],
   handlers: {
     '1.0.0': function agreementState(req, res, next) {
       const state = req.params.state;
-      const owner = req.params.owner || req.user.id;
-      if (state === null || state === undefined) {
-        return next(new Errors.ArgumentNullError('state'));
-      }
+      const owner = req.params.owner;
+
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), { owner, state }, {timeout: getTimeout(ROUTE_NAME)})
+        .publishAndWait(getRoute(ROUTE_NAME), { owner, state }, { timeout: getTimeout(ROUTE_NAME) })
         .then(() => {
           res.send(204);
         })

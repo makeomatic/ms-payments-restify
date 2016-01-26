@@ -37,13 +37,13 @@ exports.del = {
   path: '/plans/:id',
   middleware: ['auth', 'admin'],
   handlers: {
-    '1.0.0': (req, res, next) => {
+    '1.0.0': function deletePlan(req, res, next) {
       const { id } = req.params;
       if (id === null || id === undefined) {
         return next(new Errors.ArgumentNullError('id'));
       }
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), id, {timeout: getTimeout(ROUTE_NAME)})
+        .publishAndWait(getRoute(ROUTE_NAME), id, { timeout: getTimeout(ROUTE_NAME) })
         .then(() => {
           res.send(200);
         })

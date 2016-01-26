@@ -3,7 +3,7 @@ const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'saleGet';
 
 /**
- * @api {get} /get/:sale List sales
+ * @api {get} /get/:sale get sale data
  * @apiVersion 1.0.0
  * @apiName getSale
  * @apiGroup Sales
@@ -33,9 +33,9 @@ const ROUTE_NAME = 'saleGet';
  * @apiSuccess (Code 200) {String}   links.next        link to the next page
  *
  * @apiExample {curl} Example usage:
- *   curl -i -X GET
- *     -H 'Accept-Version: *'
- *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
+ *   curl -i -X GET \
+ *     -H 'Accept-Version: *' \
+ *     -H 'Accept: application/vnd.api+json' \
  *     -H "Authorization: JWT therealtokenhere" \
  *     "https://api-sandbox.cappacity.matic.ninja/api/sales/PAY-1237198789d89"
  *

@@ -29,9 +29,19 @@ const { createRequest, createResponse } = require('../listUtils');
  * @apiSuccess (Code 200) {Number}   meta.pages        total number of pages
  * @apiSuccess (Code 200) {Number}   meta.cursor       set as offset for the next page
  * @apiSuccess (Code 200) {Object[]} data              response data
- * @apiSuccess (Code 200) {String}   data.type         response data type - always `user`
+ * @apiSuccess (Code 200) {String}   data.type         response data type - always `transaction`
  * @apiSuccess (Code 200) {String}   data.id           transactions id
  * @apiSuccess (Code 200) {Object}   data.attributes   transactions attributes
+ * @apiSuccess (Code 200) {String}   data.attributes.id mirrors `data.id`
+ * @apiSuccess (Code 200) {Number}   data.attributes.type - `0` - recurring related payment, `1` - one time sale
+ * @apiSuccess (Code 200) {String|Null} data.attributes.owner - either a `username` or `null` when failed to determine
+ * @apiSuccess (Code 200) {String}   data.attributes.payer - paypal email
+ * @apiSuccess (Code 200) {Number}   data.attributes.date - date of the transaction, timestamp in `ms`
+ * @apiSuccess (Code 200) {Number}   data.attributes.update_time - similar as date, usually the same
+ * @apiSuccess (Code 200) {String}   data.attributes.amount - "x.xx" parseFloat to get the actual number
+ * @apiSuccess (Code 200) {String}   data.attributes.currency - for now always `USD`
+ * @apiSuccess (Code 200) {String}   data.attributes.description - payment reference
+ * @apiSuccess (Code 200) {String}   data.attributes.status
  * @apiSuccess (Code 200) {Object}   data.links        transactions links
  * @apiSuccess (Code 200) {String}   data.links.self   link to the current resource
  * @apiSuccess (Code 200) {String}   links             links

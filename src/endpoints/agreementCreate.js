@@ -61,6 +61,7 @@ exports.create = create;
  * @apiDescription
  * Makes PayPal request to create new agreement based on pre-defined plan.
  * Returns new agreement object and link to approve it by user.
+ * When response is returned, application must open `data.links.approve` in the browser
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
@@ -69,9 +70,6 @@ exports.create = create;
  * @apiParam (Params) {Object} data Data container.
  * @apiParam (Params) {String} data.type Data type, must be 'agreement'.
  * @apiParam (Params) {Object} data.attributes New agreement details.
- * @apiParam (Params) {String} data.attributes.name Any name, required.
- * @apiParam (Params) {String} data.attributes.description Any description, optional.
- * @apiParam (Params) {String} data.attributes.start_date Optional date-time to start billing cycle. If not specified, current moment will be used.
  * @apiParam (Params) {String} data.attributes.plan Plan id, required.
  *
  * @apiSuccess (Return) {Object} data Data container.
@@ -92,9 +90,7 @@ exports.create = create;
  *    	"data": {
  *    		"type": "agreement",
  *     		"attributes": {
- *      		"name": "professional-monthly-test",
- *       		"description": "test professional subscription payment with id PD-3EH44571MW10700544AOMJ3I",
- *         "plan": "PD-3EH44571MW10700544AOMJ3I"
+ *          "plan": "PD-3EH44571MW10700544AOMJ3I"
  *        }
  *      }
  *    }'

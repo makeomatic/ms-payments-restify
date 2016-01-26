@@ -7,8 +7,8 @@ const ROUTE_NAME = 'agreementBill';
  * @api {post} /agreements/:id/bill Bill agreement
  * @apiVersion 1.0.0
  * @apiName BillAgreement
- * @apiGroup Agreements
- * @apiPermission NonePermission
+ * @apiGroup Sync
+ * @apiPermission Service
  *
  * @apiDescription
  * Used to check if user has been billed for current billing period and updates model count if neccessary.
@@ -22,17 +22,17 @@ const ROUTE_NAME = 'agreementBill';
  *
  * @apiParam (Params) {String} id Agreement id to check.
  *
- * @apiSuccess (Return) {Object} data Data container.
- * @apiSuccess (Return) {String} data.type Always 'status'.
- * @apiSuccess (Return) {Object} data.attributes Status data.
- * @apiSuccess (Return) {Boolean} data.attributes.updated True if agreement was billed and models were applied to user.
+ * @apiSuccess (Body) {Object} data Data container.
+ * @apiSuccess (Body) {String} data.type Always 'status'.
+ * @apiSuccess (Body) {Object} data.attributes Status data.
+ * @apiSuccess (Body) {Boolean} data.attributes.updated True if agreement was billed and models were applied to user.
  *
  * @apiExample {curl} Example usage:
- *   curl -i -X POST
- *     -H 'Accept-Version: *'
+ *   curl -i -X POST \
+ *     -H 'Accept-Version: *' \
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/agreements/PP-124135GS/bill"
+ *     "https://api-sandbox.cappacity.matic.ninja/api/payments/agreements/I-124135GS/bill"
  *
  * @apiUse UserAuthResponse
  * @apiUse ValidationError
@@ -44,20 +44,22 @@ const ROUTE_NAME = 'agreementBill';
  */
 exports.post = {
   path: '/agreements/:id/bill',
+  middleware: ['service'],
   handlers: {
-    '1.0.0': (req, res, next) => {
+    '1.0.0': function agreementBill(req, res, next) {
       const { id } = req.params;
       if (id === null || id === undefined) {
         return next(new Errors.ArgumentNullError('id'));
       }
+
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), id, {timeout: getTimeout(ROUTE_NAME)})
-        .then((result) => {
+        .publishAndWait(getRoute(ROUTE_NAME), id, { timeout: getTimeout(ROUTE_NAME) })
+        .then(result => {
           const response = {
-            'data': {
-              'type': 'status',
-              'attributes': {
-                'updated': result.shouldUpdate,
+            data: {
+              type: 'status',
+              attributes: {
+                updated: result.shouldUpdate,
               },
             },
           };

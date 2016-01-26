@@ -56,8 +56,8 @@ const { createRequest, createResponse } = require('../listUtils');
  * 				"pages": 10
  * 			},
  * 			"data": [{
- * 				"type": "sale",
- * 				"id": "PP-10200414C5",
+ * 				"type": "recurring",
+ * 				"id": "DSA10200414C5",
  * 				"attributes": {
  * 					...
  * 				},

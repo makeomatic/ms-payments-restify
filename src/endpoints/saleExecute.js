@@ -44,7 +44,7 @@ function execute(amqp, data) {
  *     -H 'Accept: application/vnd.api+json' \
  *     -H 'Content-Type: application/vnd.api+json' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/sales/execute"
+ *     "https://api-sandbox.cappacity.matic.ninja/api/payments/sales/execute"
  *     -d '{ data: { type: "executionOrder", attributes: { "payment_id": "someid", "payer_id": "anotherid" } } }'
  *
  * @apiUse ValidationError
