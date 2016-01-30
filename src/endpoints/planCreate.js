@@ -123,6 +123,7 @@ exports.post = {
               name: plan.name,
               description: plan.description || '',
               type: 'infinite',
+              state: 'active',
               payment_definitions: [monthly, yearly],
             },
             subscriptions: [{
