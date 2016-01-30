@@ -4,9 +4,18 @@
     "subscription": {
       "type": "object",
       "properties": {
-        "price": { "type": "string", "minLength": 1 },
-        "models": { "type": "string", "minLength": 1 },
-        "model_price": { "type": "string", "minLength": 1 }
+        "price": {
+          "type": "number",
+          "minimum": 0.01
+        },
+        "models": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "modelPrice": {
+          "type": "string",
+          "minimum": 0.01
+        }
       }
     }
   }

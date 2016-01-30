@@ -30,12 +30,12 @@ const ROUTE_NAME = 'planCreate';
  * @apiParam (Params) {Object}  data.attributes.subscriptions Subscriptions options.
  * @apiParam (Params) {Object}  data.attributes.subscriptions.monthly Monthly options.
  * @apiParam (Params) {String}  data.attributes.subscriptions.monthly.price Subscription price.
- * @apiParam (Params) {String}  data.attributes.subscriptions.monthly.models Amount of models for this subscription.
- * @apiParam (Params) {String}  data.attributes.subscriptions.monthly.model_price How much additional model cost.
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.monthly.models Amount of models for this subscription.
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.monthly.modelPrice How much additional model cost.
  * @apiParam (Params) {String}  data.attributes.subscriptions.yearly Yearly options.
  * @apiParam (Params) {Object}  data.attributes.subscriptions.yearly.price Subscription price.
- * @apiParam (Params) {String}  data.attributes.subscriptions.yearly.models Amount of models for this subscription.
- * @apiParam (Params) {String}  data.attributes.subscriptions.yearly.model_price How much additional model cost.
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.yearly.models Amount of models for this subscription.
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.yearly.modelPrice How much additional model cost.
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
@@ -48,14 +48,14 @@ const ROUTE_NAME = 'planCreate';
  *       "description": "Test plan",
  *       "subscriptions": {
  *         "monthly": {
- *           "price": "9.99",
- *           "models": "100",
- *           "model_price": "0.09"
+ *           "price": 9.99,
+ *           "models": 100,
+ *           "modelPrice": 0.09
  *         },
  *         "yearly": {
- *           "price": "99.99",
- *           "models": "1500",
- *           "model_price": "0.01"
+ *           "price": 99.99,
+ *           "models": 1500,
+ *           "modelPrice": 0.01
  *         }
  *       }
  *     } }'
@@ -127,11 +127,11 @@ exports.post = {
             },
             subscriptions: [{
               models: plan.subscriptions.monthly.models,
-              price: plan.subscriptions.monthly.model_price,
+              price: plan.subscriptions.monthly.modelPrice,
               name: 'monthly',
             }, {
               models: plan.subscriptions.yearly.models,
-              price: plan.subscriptions.yearly.model_price,
+              price: plan.subscriptions.yearly.modelPrice,
               name: 'yearly',
             }],
           };
