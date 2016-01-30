@@ -79,7 +79,7 @@ exports.post = {
           const plan = body.data.attributes;
 
           const monthly = {
-            name: 'monthly',
+            name: 'month',
             type: 'regular',
             frequency_interval: '1',
             frequency: 'month',
@@ -98,7 +98,7 @@ exports.post = {
           };
 
           const yearly = {
-            name: 'yearly',
+            name: 'year',
             type: 'regular',
             frequency_interval: '1',
             frequency: 'year',
@@ -128,11 +128,11 @@ exports.post = {
             subscriptions: [{
               models: plan.subscriptions.monthly.models,
               price: plan.subscriptions.monthly.modelPrice,
-              name: 'monthly',
+              name: 'month',
             }, {
               models: plan.subscriptions.yearly.models,
               price: plan.subscriptions.yearly.modelPrice,
-              name: 'yearly',
+              name: 'year',
             }],
           };
 
