@@ -13,7 +13,7 @@
           "minimum": 0
         },
         "modelPrice": {
-          "type": "string",
+          "type": "number",
           "minimum": 0.01
         }
       }
