@@ -86,7 +86,7 @@ exports.post = {
             cycles: '0',
             amount: {
               currency: 'USD',
-              value: plan.subscriptions.monthly.price,
+              value: plan.subscriptions.monthly.price.toPrecision(2),
             },
             charge_models: [{
               type: 'tax',
@@ -105,7 +105,7 @@ exports.post = {
             cycles: '0',
             amount: {
               currency: 'USD',
-              value: plan.subscriptions.yearly.price,
+              value: plan.subscriptions.yearly.price.toPrecision(2),
             },
             charge_models: [{
               type: 'tax',
