@@ -3,6 +3,7 @@
   "definitions": {
     "subscription": {
       "type": "object",
+      "required": ["price", "models", "modelPrice"],
       "properties": {
         "price": {
           "type": "number",
