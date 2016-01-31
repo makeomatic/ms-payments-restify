@@ -137,12 +137,12 @@ const execute = Promise.coroutine(function* generateSwitch(req) {
  *     -H 'Accept: application/vnd.api+json' \
  *     -H "Authorization: JWT therealtokenhere" \
  *     "https://api-sandbox.cappacity.matic.ninja/api/payments/plans/switch" -d '{
- *     		"data": {
- *     		  "type": "switch",
- *     			"attributes": {
- *        		"plan": "id of plan"
- *     			}
- *     		}
+ *       "data": {
+ *         "type": "switch",
+ *           "attributes": {
+ *             "plan": "id of plan"
+ *           }
+ *       }
  *     }'
  *
  * @apiUse ValidationError
@@ -153,22 +153,22 @@ const execute = Promise.coroutine(function* generateSwitch(req) {
  *  HTTP/1.1 200 OK
  *
  *  {
- *  	"meta": {
- *  		"id": "reqid"
- *  	},
- *  	"data": {
- *  		"id": "agreement-id",
- *  		"type": "agreement",
- *  		"attributes": {
- *  			// ...
- *  		},
- *  		links: {
+ *    "meta": {
+ *      "id": "reqid"
+ *    },
+ *    "data": {
+ *      "id": "agreement-id",
+ *      "type": "agreement",
+ *      "attributes": {
+ *        // ...
+ *      },
+ *      links: {
  *        approve: result.url, // if not present - no need to approve, ie 'free' plan
  *      },
  *      meta: {
  *        token: result.token,
  *      }
- *  	}
+ *    }
  *  }
  */
 exports.post = {
