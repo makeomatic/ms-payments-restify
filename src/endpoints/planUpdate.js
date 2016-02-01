@@ -1,6 +1,8 @@
-// const config = require('../config.js');
-// const { getRoute, getTimeout } = config;
-// const ROUTE_NAME = 'planUpdate';
+const { ArgumentNullError } = require('common-errors');
+
+const config = require('../config.js');
+const { getRoute, getTimeout } = config;
+const ROUTE_NAME = 'planUpdate';
 
 /**
  * @api {patch} /plans/:id Update plan
@@ -9,7 +11,7 @@
  * @apiGroup Plans
  * @apiPermission AdminPermission
  *
- * @apiDescription Updates plan definition. Not implemented yet, always returns 505.
+ * @apiDescription Updates plan definition for non-activated plans.
  *
  * @apiHeader (Authorization) {String} Authorization JWT :accessToken
  * @apiHeaderExample Authorization-Example:
@@ -26,7 +28,7 @@
  *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
  *     -H "Authorization: JWT therealtokenhere" \
  *     "https://api-sandbox.cappacity.matic.ninja/api/plans/:id"
- *     -d '{ "op": "replace", "path": "/", "value": { "type": "fixed" } }'
+ *     -d '{ "plan": { "name": "Updated name" } }'
  *
  * @apiUse ValidationError
  * @apiUse UnauthorizedError
@@ -41,24 +43,21 @@ exports.patch = {
   middleware: ['auth'],
   handlers: {
     '1.0.0': function planUpdate(req, res, next) {
-      res.send(505);
-      return next(false);
-      /*
       const { id } = req.params;
-      const query = req.body;
+      const plan = req.body;
       if (id === null || id === undefined) {
-        return next(new Errors.ArgumentNullError('id'));
+        return next(new ArgumentNullError('id'));
       }
-      if (query === null || query === undefined) {
-        return next(new Errors.ArgumentNullError('query'));
+      if (plan === null || plan === undefined) {
+        return next(new ArgumentNullError('query'));
       }
       return req.amqp
-        .publishAndWait(getRoute(ROUTE_NAME), { id, query }, {timeout: getTimeout(ROUTE_NAME)})
-        .then(plan => {
-          res.send(plan);
+        .publishAndWait(getRoute(ROUTE_NAME), { id, plan }, {timeout: getTimeout(ROUTE_NAME)})
+        .then(updated => {
+          res.send(config.models.Plan.transform(updated, true));
+          return false;
         })
         .asCallback(next);
-      */
     },
   },
 };
