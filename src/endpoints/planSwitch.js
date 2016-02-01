@@ -50,7 +50,7 @@ function getFreePlanData(amqp) {
 
 function saveFreeMetadata(user, price, amqp) {
   const period = 'month';
-  const nextCycle = moment().add(1, period).format();
+  const nextCycle = moment().add(1, period).valueOf();
 
   const updateRequest = {
     username: user,
