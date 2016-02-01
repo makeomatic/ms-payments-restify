@@ -61,6 +61,8 @@ function saveFreeMetadata(user, price, amqp) {
         agreement: 'free',
         plan: 'free',
         modelPrice: price,
+        subscriptionPrice: '0.00',
+        subscriptionInterval: 'month',
       },
     },
   };
