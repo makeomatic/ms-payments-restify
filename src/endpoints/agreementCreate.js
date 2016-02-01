@@ -5,11 +5,11 @@ const ROUTE_NAME = 'agreementCreate';
 
 function create(req, user) {
   return function processBody(agreement) {
-    return req
-      .amqp.publishAndWait(getRoute('planGet'), agreement.plan, { timeout: getTimeout('planGet') })
-      .then(plan => {
-        const [subscription] = plan.subs;
-        const name = plan.plan.description;
+    return req.amqp
+      .publishAndWait(getRoute('planGet'), agreement.plan, { timeout: getTimeout('planGet') })
+      .then(data => {
+        const [subscription] = data.subs;
+        const name = data.plan.description;
         const description = [
           `${subscription.name} ${name}`,
           `Provides ${subscription.models} models. Extra for ${subscription.price}${subscription.definition.amount.currency} per model`,
