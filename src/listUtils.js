@@ -15,13 +15,18 @@ const USER_PROTECTED_ROUTES = ['agreementList', 'saleList', 'transactionList', '
 
 function createRequest(req, ROUTE_NAME) {
   return Promise.try(function verifyRights() {
-    const { order, filter, offset, limit, sortBy } = req.query;
+    const { order, type, filter, offset, limit, sortBy } = req.query;
     const parsedFilter = filter && JSON.parse(decodeURIComponent(filter)) || {};
+    let { owner } = req.query;
 
     if (!req.user || !req.user.isAdmin()) {
       if (USER_PROTECTED_ROUTES.indexOf(ROUTE_NAME) !== -1) {
         // user is always defined here as required by the right
-        parsedFilter.owner = req.user.id;
+        if (ROUTE_NAME === 'transactionCommon') {
+          owner = req.user.id;
+        } else {
+          parsedFilter.owner = req.user.id;
+        }
       } else if (ROUTE_NAME === 'planList') {
         parsedFilter.hidden = 'false';
       }
@@ -32,6 +37,8 @@ function createRequest(req, ROUTE_NAME) {
       offset: offset && +offset || undefined,
       limit: limit && +limit || 10,
       filter: parsedFilter,
+      type: type || undefined,
+      owner: owner || undefined,
       criteria: sortBy && decodeURIComponent(sortBy) || undefined,
     });
   })
