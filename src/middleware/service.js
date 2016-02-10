@@ -1,21 +1,18 @@
 const Errors = require('common-errors');
 const config = require('../config.js');
 const jwt = require('jsonwebtoken');
-const { payments: { serviceSecret } } = config;
 
 module.exports = function allowOnlyService(req, res, next) {
-  const { body, log } = req;
+  const { body } = req;
 
-  log.info('service input', body);
-
-  jwt.verify(body, serviceSecret, {
+  jwt.verify(body, config.payments.serviceSecret, {
     algorithms: ['HS512'],
     audience: 'service',
     issuer: 'cron',
     subject: 'perform_sync',
   }, function decodedToken(error, decoded) {
     if (error) {
-      return next(new Errors.NotPermittedError('operation not permitted', error));
+      return next(new Errors.NotPermittedError(`Error with token: ${body}`, error));
     }
 
     req.body = decoded;
