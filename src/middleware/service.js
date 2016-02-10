@@ -1,10 +1,14 @@
 const Errors = require('common-errors');
 const config = require('../config.js');
 const jwt = require('jsonwebtoken');
-const { payments } = config;
+const { payments: { serviceSecret } } = config;
 
 module.exports = function allowOnlyService(req, res, next) {
-  jwt.verify(req.body, payments.serviceSecret, {
+  const { body, log } = req;
+
+  log.info('service input', body);
+
+  jwt.verify(body, serviceSecret, {
     algorithms: ['HS512'],
     audience: 'service',
     issuer: 'cron',
