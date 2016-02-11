@@ -3,6 +3,29 @@ const config = require('../config.js');
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planCreate';
 
+function formSubscriptionObject(period, data) {
+  return {
+    name: period,
+    type: 'regular',
+    frequency_interval: '1',
+    frequency: period,
+    cycles: '0',
+    amount: {
+      currency: 'USD',
+      value: data.price.toPrecision(2),
+    },
+    charge_models: [{
+      type: 'tax',
+      amount: {
+        currency: 'USD',
+        value: '0.0',
+      },
+    }],
+  };
+}
+
+exports.formSubscriptionObject = formSubscriptionObject;
+
 /**
  * @api {post} /plans Create plan
  * @apiVersion 1.0.0
@@ -77,44 +100,9 @@ exports.post = {
         .validate('plan.create', req.body)
         .then(body => {
           const plan = body.data.attributes;
-
-          const monthly = {
-            name: 'month',
-            type: 'regular',
-            frequency_interval: '1',
-            frequency: 'month',
-            cycles: '0',
-            amount: {
-              currency: 'USD',
-              value: plan.subscriptions.monthly.price.toPrecision(2),
-            },
-            charge_models: [{
-              type: 'tax',
-              amount: {
-                currency: 'USD',
-                value: '0.0',
-              },
-            }],
-          };
-
-          const yearly = {
-            name: 'year',
-            type: 'regular',
-            frequency_interval: '1',
-            frequency: 'year',
-            cycles: '0',
-            amount: {
-              currency: 'USD',
-              value: plan.subscriptions.yearly.price.toPrecision(2),
-            },
-            charge_models: [{
-              type: 'tax',
-              amount: {
-                currency: 'USD',
-                value: '0.0',
-              },
-            }],
-          };
+          const { subscriptions } = plan;
+          const monthly = formSubscriptionObject('month', subscriptions.monthly);
+          const yearly = formSubscriptionObject('year', subscriptions.yearly);
 
           const message = {
             hidden: plan.hidden || false,
@@ -123,16 +111,16 @@ exports.post = {
               name: plan.name,
               description: plan.description || '',
               type: 'infinite',
-              state: 'active',
+              state: plan.state || 'active',
               payment_definitions: [monthly, yearly],
             },
             subscriptions: [{
-              models: plan.subscriptions.monthly.models,
-              price: plan.subscriptions.monthly.modelPrice,
+              models: subscriptions.monthly.models,
+              price: subscriptions.monthly.modelPrice,
               name: 'month',
             }, {
-              models: plan.subscriptions.yearly.models,
-              price: plan.subscriptions.yearly.modelPrice,
+              models: subscriptions.yearly.models,
+              price: subscriptions.yearly.modelPrice,
               name: 'year',
             }],
           };

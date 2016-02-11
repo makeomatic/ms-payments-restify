@@ -7,24 +7,64 @@
       "type": "object",
       "required": ["id", "type", "attributes"],
       "properties": {
-        "id": { "type": "string", "minLength": 1 },
-        "type": { "type": "string", "enum": ["plan"] },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "constant": "plan"
+        },
         "attributes": {
           "type": "object",
+          "additionalProperties": false,
+	        "minProperties": 1,
           "properties": {
-            "hidden": { "type": "boolean" },
-            "alias": { "type": "string", "minLength": 1 },
-            "name": { "type": "string", "minLength": 1 },
-            "description": { "type": "string" },
+            "alias": {
+              "type": "string",
+              "minLength": 1,
+              "not": {
+                "constant": "free"
+              }
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            },
+            "hidden": {
+              "type": "boolean"
+            },
             "subscriptions": {
               "type": "object",
-              "required": ["monthly", "yearly"],
+              "additionalProperties": false,
+              "minProperties": 1,
               "properties": {
-                "monthly": { "$ref": "common#/definitions/subscription" },
-                "yearly": { "$ref": "common#/definitions/subscription" }
+                "monthly": {
+                  "$ref": "plan.update#/definitions/subscription"
+                },
+                "yearly": {
+                  "$ref": "plan.update#/definitions/subscription"
+                }
               }
             }
           }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "subscription": {
+			"additionalProperties": false,
+      "type": "object",
+			"minProperties": 1,
+      "properties": {
+        "models": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "modelPrice": {
+          "type": "number",
+          "minimum": 0.01
         }
       }
     }

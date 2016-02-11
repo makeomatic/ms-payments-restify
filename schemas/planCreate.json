@@ -7,7 +7,7 @@
       "type": "object",
       "required": ["type", "attributes"],
       "properties": {
-        "type": { "type": "string", "enum": ["plan"] },
+        "type": { "type": "string", "constant": "plan" },
         "attributes": {
           "type": "object",
           "required": ["name", "alias", "subscriptions"],
@@ -15,6 +15,7 @@
             "hidden": { "type": "boolean" },
             "alias": { "type": "string", "minLength": 1 },
             "name": { "type": "string", "minLength": 1 },
+            "state": { "type": "string", "minLength": 1, "enum": ["active", "created"] },
             "description": { "type": "string" },
             "subscriptions": {
               "type": "object",
