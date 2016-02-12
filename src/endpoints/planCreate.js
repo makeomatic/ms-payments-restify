@@ -105,7 +105,7 @@ exports.post = {
           const yearly = formSubscriptionObject('year', subscriptions.yearly);
 
           const message = {
-            hidden: plan.hidden || false,
+            hidden: plan.hidden || true,
             alias: plan.alias || '',
             plan: {
               name: plan.name,
