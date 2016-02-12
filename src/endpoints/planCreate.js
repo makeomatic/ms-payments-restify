@@ -12,7 +12,7 @@ function formSubscriptionObject(period, data) {
     cycles: '0',
     amount: {
       currency: 'USD',
-      value: data.price.toPrecision(2),
+      value: data.price.toFixed(2),
     },
     charge_models: [{
       type: 'tax',
