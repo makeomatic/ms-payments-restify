@@ -1,0 +1,23 @@
+{
+  "id": "sale.create.dyn",
+  "type": "object",
+  "required": ["data"],
+  "properties": {
+    "data": {
+      "type": "object",
+      "required": ["type", "attributes"],
+      "properties": {
+        "type": { "type": "string", "constant": "sale" },
+        "attributes": {
+          "type": "object",
+          "required": ["amount", "type"],
+          "properties": {
+            "user": { "type": "string", "minLength": 1 },
+            "amount": { "type": "number", "minimum": 0, "maximum": 999999 },
+            "type": {"type": "integer", "enum": [2]}
+          }
+        }
+      }
+    }
+  }
+}
