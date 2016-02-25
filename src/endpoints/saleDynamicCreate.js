@@ -6,7 +6,7 @@ const ROUTE_NAME = 'saleCreateDynamic';
 /**
  * @api {post} /sales/custom Create custom sale
  * @apiVersion 1.0.0
- * @apiName CreateSale
+ * @apiName CreateDynamicSale
  * @apiGroup Sales
  * @apiPermission UserPermission
  *
