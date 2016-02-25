@@ -70,15 +70,17 @@ exports.post = {
       return validator.validate('sale.create', req.body)
         .then(body => {
           let user;
-          if (user === null || user === undefined || !req.user.isAdmin()) {
+          if (!req.user.isAdmin()) {
             user = req.user.id;
           } else {
-            user = body.data.attributes.user;
+            user = body.data.attributes.user || req.user.id;
           }
+
           const message = {
             owner: user,
             amount: body.data.attributes.amount,
           };
+
           return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) });
         })
         .then(result => {

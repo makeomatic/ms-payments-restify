@@ -41,10 +41,13 @@ const config = module.exports = {
       saleList: 'sale.list',
       saleSync: 'sale.sync',
       saleGet: 'sale.get',
+      saleCreateDynamic: 'sale.createDynamic',
     },
     timeouts: {
       agreementExecute: 25000,
       agreementCreate: 25000,
+      saleCreate: 25000,
+      saleCreateDynamic: 25000,
     },
     attachPoint: 'payments',
     serviceSecret: 'megasecret',
@@ -77,5 +80,5 @@ exports.getTimeout = function getTimeout(route) {
  */
 exports.getRoute = function getRoute(route) {
   const payments = config.payments;
-  return [payments.prefix, payments.postfix[route]].join('.');
+  return [payments.prefix, payments.postfix[route] || route].join('.');
 };
