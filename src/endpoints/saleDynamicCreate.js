@@ -24,6 +24,13 @@ const ROUTE_NAME = 'saleCreateDynamic';
  * @apiParam (Params) {String} data.attributes.user Optional user, if sent by non-admin ignored and automatically set to current user.
  * @apiParam (Params) {String} data.attributes.amount Price.
  * @apiParam (Params) {String} data.attributes.type Sale type. Use 2 for 3D printing service, other types are not accepted at the moment.
+ * @apiParam (Params) {Object} data.attributes.cart Shopping cart metadata, required.
+ * @apiParam (Params) {String} data.attributes.cart.id Shopping cart id.
+ * @apiParam (Params) {String} data.attributes.cart.shipping_type Shipping type.
+ * @apiParam (Params) {Number} data.attributes.cart.shipping_price Shipping price.
+ * @apiParam (Params) {Number} data.attributes.cart.printing_price Printing price.
+ * @apiParam (Params) {Number} data.attributes.cart.service_price Price to pay for printing service.
+ * @apiParam (Params) {Number} data.attributes.cart.user_price Amount of money to charge from user.
  *
  * @apiSuccess (Return) {Object} data Data container.
  * @apiSuccess (Return) {String} data.id Id of newly created sale.
@@ -81,6 +88,7 @@ exports.post = {
             owner: user,
             amount: body.data.attributes.amount,
             type: body.data.attributes.type,
+            cart: body.data.attributes.cart,
           };
 
           return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) });
