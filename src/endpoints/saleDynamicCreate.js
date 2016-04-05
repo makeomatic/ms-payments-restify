@@ -21,8 +21,8 @@ const ROUTE_NAME = 'saleCreateDynamic';
  * @apiParam (Params) {Object} data Data container.
  * @apiParam (Params) {String} data.type Data type, must be 'sale'.
  * @apiParam (Params) {Object} data.attributes New sale details.
- * @apiParam (Params) {String} data.attributes.user Optional user, if sent by non-admin ignored and automatically set to current user.
- * @apiParam (Params) {String} data.attributes.amount Price.
+ * @apiParam (Params) {String} [data.attributes.user] Optional user, if sent by non-admin ignored and automatically set to current user.
+ * @apiParam (Params) {Number} data.attributes.amount Price.
  * @apiParam (Params) {String} data.attributes.type Sale type. Use 2 for 3D printing service, other types are not accepted at the moment.
  * @apiParam (Params) {Object} data.attributes.cart Shopping cart metadata, required.
  * @apiParam (Params) {String} data.attributes.cart.id Shopping cart id.
@@ -42,12 +42,11 @@ const ROUTE_NAME = 'saleCreateDynamic';
  * @apiSuccess (Return) {String} data.meta.token Token (not used, but sent just in case).
  *
  * @apiExample {curl} Example usage:
- *   curl -i -X POST
- *     -H 'Accept-Version: *'
- *     -H 'Accept: application/vnd.api+json' -H 'Accept-Encoding: gzip, deflate' \
+ *   curl -i -X POST \
+ *     -H 'Accept: application/vnd.api+json' \
  *     -H "Authorization: JWT therealtokenhere" \
- *     "https://api-sandbox.cappacity.matic.ninja/api/sales"
- *     -d '{ "data": { "type": "sale", "attributes": { "amount": "50", "type": 2 } } }'
+ *     "https://api-sandbox.cappacity.matic.ninja/api/sales/sales-custom" \
+ *     -d '{ "data": { "type": "sale", "attributes": { "amount": 50.0, "type": 2 } } }'
  *
  * @apiUse ValidationError
  * @apiUse UnauthorizedError
@@ -71,7 +70,7 @@ const ROUTE_NAME = 'saleCreateDynamic';
  *  }
  */
 exports.post = {
-  path: '/sales',
+  path: '/sales-custom',
   middleware: ['auth'],
   handlers: {
     '1.0.0': function createSale(req, res, next) {
