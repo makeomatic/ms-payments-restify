@@ -1,5 +1,6 @@
 const validator = require('../validator.js');
 const config = require('../config.js');
+
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementCreate';
 
@@ -7,7 +8,7 @@ function create(req, user) {
   return function processBody(agreement) {
     return req.amqp
       .publishAndWait(getRoute('planGet'), agreement.plan, { timeout: getTimeout('planGet') })
-      .then(data => {
+      .then((data) => {
         const [subscription] = data.subs;
         const name = data.plan.description;
         const description = [
@@ -87,9 +88,9 @@ exports.create = create;
  *    -H 'Content-Type: application/vnd.api+json' \
  *    -H "Authorization: JWT realjwtroken" \
  *    "https://api-sandbox.cappasity.matic.ninja/api/payments/agreements" -d '{
- *    	"data": {
- *    		"type": "agreement",
- *     		"attributes": {
+ *      "data": {
+ *        "type": "agreement",
+ *         "attributes": {
  *          "plan": "PD-3EH44571MW10700544AOMJ3I"
  *        }
  *      }
@@ -125,7 +126,7 @@ exports.post = {
         .get('data')
         .get('attributes')
         .then(create(req, req.user.id))
-        .then(response => {
+        .then((response) => {
           res.send(201, response);
         })
         .asCallback(next);

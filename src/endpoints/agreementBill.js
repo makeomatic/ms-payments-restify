@@ -1,5 +1,6 @@
 const Errors = require('common-errors');
 const config = require('../config.js');
+
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementBill';
 
@@ -54,7 +55,7 @@ exports.post = {
 
       return req.amqp
         .publishAndWait(getRoute(ROUTE_NAME), id, { timeout: getTimeout(ROUTE_NAME) })
-        .then(result => {
+        .then((result) => {
           const response = {
             data: {
               type: 'status',

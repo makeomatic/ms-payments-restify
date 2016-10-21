@@ -1,5 +1,6 @@
-const ROUTE_NAME = 'transactionGet';
 const config = require('../config.js');
+
+const ROUTE_NAME = 'transactionGet';
 const { getRoute, getTimeout } = config;
 
 /**
@@ -63,7 +64,7 @@ exports.get = {
 
       return req.amqp
         .publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) })
-        .then(transaction => {
+        .then((transaction) => {
           res.send(200, config.models.Transaction.transform(transaction, true));
           return false;
         })

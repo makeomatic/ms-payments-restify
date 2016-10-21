@@ -1,6 +1,7 @@
 const merge = require('lodash/merge');
 const omit = require('lodash/omit');
 const users = require('ms-users-restify');
+
 const BLACK_LIST = ['reconfigure', 'getTimeout', 'getRoute'];
 
 /**

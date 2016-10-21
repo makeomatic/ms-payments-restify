@@ -1,5 +1,6 @@
 const validator = require('../validator.js');
 const config = require('../config.js');
+
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planUpdate';
 
@@ -70,13 +71,13 @@ exports.patch = {
     '1.0.0': function planUpdate(req, res, next) {
       return validator
         .validate('plan.update', req.body)
-        .then(body => {
+        .then((body) => {
           const plan = body.data;
           const { id, attributes } = plan;
 
           return req.amqp.publishAndWait(getRoute(ROUTE_NAME), { ...attributes, id }, { timeout: getTimeout(ROUTE_NAME) });
         })
-        .then(updated => {
+        .then((updated) => {
           res.send(config.models.Plan.transform(updated, true));
           return false;
         })

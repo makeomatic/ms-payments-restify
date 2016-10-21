@@ -1,5 +1,6 @@
 const validator = require('../validator.js');
 const config = require('../config.js');
+
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'saleExecute';
 
@@ -67,7 +68,7 @@ exports.post = {
         .then(body => (
           execute(req.amqp, body.attributes)
         ))
-        .then(sale => {
+        .then((sale) => {
           const response = {
             type: 'sale',
             attributes: sale,

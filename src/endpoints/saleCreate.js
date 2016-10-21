@@ -1,5 +1,6 @@
 const validator = require('../validator.js');
 const config = require('../config.js');
+
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'saleCreate';
 
@@ -68,7 +69,7 @@ exports.post = {
   handlers: {
     '1.0.0': function createSale(req, res, next) {
       return validator.validate('sale.create', req.body)
-        .then(body => {
+        .then((body) => {
           let user;
           if (!req.user.isAdmin()) {
             user = req.user.id;
@@ -83,7 +84,7 @@ exports.post = {
 
           return req.amqp.publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) });
         })
-        .then(result => {
+        .then((result) => {
           const response = {
             id: result.sale.id,
             type: 'sale',

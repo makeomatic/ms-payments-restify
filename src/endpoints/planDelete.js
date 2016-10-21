@@ -1,6 +1,6 @@
 const Errors = require('common-errors');
-
 const config = require('../config.js');
+
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planDelete';
 

@@ -1,5 +1,6 @@
-const ROUTE_NAME = 'agreementGet';
 const config = require('../config.js');
+
+const ROUTE_NAME = 'agreementGet';
 const { getRoute, getTimeout } = config;
 
 /**
@@ -22,7 +23,7 @@ const { getRoute, getTimeout } = config;
  * @apiSuccess (Code 200) {String}   data.type         response data type - always `agreement`
  * @apiSuccess (Code 200) {String}   data.id           agreement id
  * @apiSuccess (Code 200) {Object}   data.attributes   agreement attribute, complete reference can be seen here:
- * 	https://github.com/makeomatic/restify-utils/blob/master/schemas/Agreement.json
+ *   https://github.com/makeomatic/restify-utils/blob/master/schemas/Agreement.json
  * @apiSuccess (Code 200) {Object}   data.links        agreement links
  * @apiSuccess (Code 200) {String}   data.links.self   link to the current resource
  *
@@ -56,7 +57,7 @@ exports.get = {
 
       return req.amqp
         .publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) })
-        .then(agreement => {
+        .then((agreement) => {
           res.send(200, config.models.Agreement.transform(agreement, true));
           return false;
         })

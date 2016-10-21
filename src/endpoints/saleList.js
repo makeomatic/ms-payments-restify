@@ -1,6 +1,7 @@
-const ROUTE_NAME = 'saleList';
 const config = require('../config.js');
 const { createRequest, createResponse } = require('../listUtils');
+
+const ROUTE_NAME = 'saleList';
 
 /**
  * @api {get} /plans List sales
@@ -50,26 +51,26 @@ const { createRequest, createResponse } = require('../listUtils');
  *
  * @apiSuccessExample {json} Success:
  *   HTTP/1.1 200 OK
- * 		{
- * 			"meta": {
- * 				"id": "request-id",
- * 				"page": 10,
- * 				"pages": 10
- * 			},
- * 			"data": [{
- * 				"type": "sale",
- * 				"id": "PP-10200414C5",
- * 				"attributes": {
- * 					...
- * 				},
- * 				"links": {
- * 					"self": "https://localhost:443/api/payments/sales?cursor=81&limit=10"
- * 				}
- * 			}],
- * 			"links": {
- * 				"self": "https://localhost:443/api/payments/sales?cursor=91&limit=10"
- * 			}
- * 		}
+ *     {
+ *       "meta": {
+ *         "id": "request-id",
+ *         "page": 10,
+ *         "pages": 10
+ *       },
+ *       "data": [{
+ *         "type": "sale",
+ *         "id": "PP-10200414C5",
+ *         "attributes": {
+ *           ...
+ *         },
+ *         "links": {
+ *           "self": "https://localhost:443/api/payments/sales?cursor=81&limit=10"
+ *         }
+ *       }],
+ *       "links": {
+ *         "self": "https://localhost:443/api/payments/sales?cursor=91&limit=10"
+ *       }
+ *     }
  */
 exports.get = {
   path: '/sales',
@@ -78,7 +79,7 @@ exports.get = {
     '1.0.0': function saleList(req, res, next) {
       return createRequest(req, ROUTE_NAME)
         .spread(createResponse(res, 'sales', config.models.Sale, 'sale.id', req.user.isAdmin()))
-        .then(sales => {
+        .then((sales) => {
           res.send(200, sales);
           return false;
         })

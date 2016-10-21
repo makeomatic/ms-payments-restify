@@ -1,7 +1,8 @@
-const ROUTE_NAME = 'planList';
 const config = require('../config.js');
 const { createRequest, createResponse } = require('../listUtils');
 const { middleware: { auth } } = require('ms-users-restify');
+
+const ROUTE_NAME = 'planList';
 
 /**
  * @api {get} /plans List plans
@@ -51,25 +52,25 @@ const { middleware: { auth } } = require('ms-users-restify');
  * @apiSuccessExample {json} Success:
  *   HTTP/1.1 200 OK
  *    {
- * 			"meta": {
- * 				"id": "request-id",
- * 				"page": 10,
- * 				"pages": 10
- * 			},
- * 			"data": [{
- * 				"type": "plan",
- * 				"id": "PP-10200414C5",
- * 				"attributes": {
- * 					...
- * 				},
- * 				"links": {
- * 					"self": "https://localhost:443/api/payments/plans/PP-10200414C5"
- * 				}
- * 			}],
- * 			"links": {
- * 				"self": "https://localhost:443/api/payments/plans?cursor=91&limit=10"
- * 			}
- * 		}
+ *       "meta": {
+ *         "id": "request-id",
+ *         "page": 10,
+ *         "pages": 10
+ *       },
+ *       "data": [{
+ *         "type": "plan",
+ *         "id": "PP-10200414C5",
+ *         "attributes": {
+ *           ...
+ *         },
+ *         "links": {
+ *           "self": "https://localhost:443/api/payments/plans/PP-10200414C5"
+ *         }
+ *       }],
+ *       "links": {
+ *         "self": "https://localhost:443/api/payments/plans?cursor=91&limit=10"
+ *       }
+ *     }
  */
 exports.get = {
   path: '/plans',
@@ -80,7 +81,7 @@ exports.get = {
 
         return createRequest(req, ROUTE_NAME)
           .spread(createResponse(res, 'plans', config.models.Plan))
-          .then(plans => { res.send(plans); })
+          .then((plans) => { res.send(plans); })
           .asCallback(next);
       });
     },

@@ -1,6 +1,7 @@
-const ROUTE_NAME = 'agreementList';
 const config = require('../config.js');
 const { createRequest, createResponse } = require('../listUtils');
+
+const ROUTE_NAME = 'agreementList';
 
 /**
  * @api {get} /agreements List agreements
@@ -30,7 +31,7 @@ const { createRequest, createResponse } = require('../listUtils');
  * @apiSuccess (Code 200) {String}   data.type         response data type - always `agreement`
  * @apiSuccess (Code 200) {String}   data.id           agreement id, NOT the token, token is available in attributes
  * @apiSuccess (Code 200) {Object}   data.attributes   agreement attributes, reference:
- * 	https://github.com/makeomatic/restify-utils/blob/master/schemas/Agreement.json
+ *   https://github.com/makeomatic/restify-utils/blob/master/schemas/Agreement.json
  * @apiSuccess (Code 200) {Object}   data.links        agreement links
  * @apiSuccess (Code 200) {String}   data.links.self   link to the current resource
  * @apiSuccess (Code 200) {String}   links             links
@@ -49,27 +50,27 @@ const { createRequest, createResponse } = require('../listUtils');
  * @apiUse ForbiddenResponse
  *
  * @apiSuccessExample {json} Success-Agreements:
- * 		HTTP/1.1 200 OK
- * 		{
- * 			"meta": {
- * 				"id": "request-id",
- * 				"page": 10,
- * 				"pages": 10
- * 			},
- * 			"data": [{
- * 				"type": "agreement",
- * 				"id": "PP-10200414C5",
- * 				"attributes": {
- * 					...
- * 				},
- * 				"links": {
- * 					"self": "https://localhost:443/api/agremeents/PP-10200414C5"
- * 				}
- * 			}],
- * 			"links": {
- * 				"self": "https://localhost:443/api/agreements?cursor=91&limit=10"
- * 			}
- * 		}
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "meta": {
+ *         "id": "request-id",
+ *         "page": 10,
+ *         "pages": 10
+ *       },
+ *       "data": [{
+ *         "type": "agreement",
+ *         "id": "PP-10200414C5",
+ *         "attributes": {
+ *           ...
+ *         },
+ *         "links": {
+ *           "self": "https://localhost:443/api/agremeents/PP-10200414C5"
+ *         }
+ *       }],
+ *       "links": {
+ *         "self": "https://localhost:443/api/agreements?cursor=91&limit=10"
+ *       }
+ *     }
  */
 exports.get = {
   path: '/agreements',
@@ -78,7 +79,7 @@ exports.get = {
     '1.0.0': function listAgreements(req, res, next) {
       return createRequest(req, ROUTE_NAME)
         .spread(createResponse(res, 'agreements', config.models.Agreement, 'agreement.id'))
-        .then(agreements => {
+        .then((agreements) => {
           res.send(200, agreements);
           return false;
         })

@@ -1,6 +1,7 @@
-const ROUTE_NAME = 'transactionCommon';
 const config = require('../config.js');
 const { createRequest, createResponse } = require('../listUtils');
+
+const ROUTE_NAME = 'transactionCommon';
 
 /**
  * @api {get} /transactions/common List common transactions
@@ -60,26 +61,26 @@ const { createRequest, createResponse } = require('../listUtils');
  *
  * @apiSuccessExample {json} Success:
  *   HTTP/1.1 200 OK
- * 		{
- * 			"meta": {
- * 				"id": "request-id",
- * 				"page": 10,
- * 				"pages": 10
- * 			},
- * 			"data": [{
- * 				"type": "sale",
- * 				"id": "PP-10200414C5",
- * 				"attributes": {
- * 					...
- * 				},
- * 				"links": {
- * 					"self": "https://localhost:443/api/payments/transactions/PP-10200414C5"
- * 				}
- * 			}],
- * 			"links": {
- * 				"self": "https://localhost:443/api/payments/transactions?cursor=91&limit=10"
- * 			}
- * 		}
+ *     {
+ *       "meta": {
+ *         "id": "request-id",
+ *         "page": 10,
+ *         "pages": 10
+ *       },
+ *       "data": [{
+ *         "type": "sale",
+ *         "id": "PP-10200414C5",
+ *         "attributes": {
+ *           ...
+ *         },
+ *         "links": {
+ *           "self": "https://localhost:443/api/payments/transactions/PP-10200414C5"
+ *         }
+ *       }],
+ *       "links": {
+ *         "self": "https://localhost:443/api/payments/transactions?cursor=91&limit=10"
+ *       }
+ *     }
  */
 exports.get = {
   path: '/transactions',
@@ -88,7 +89,7 @@ exports.get = {
     '1.0.0': function transactionList(req, res, next) {
       return createRequest(req, ROUTE_NAME)
         .spread(createResponse(res, 'transactions', config.models.Transaction, 'id'))
-        .then(transactions => {
+        .then((transactions) => {
           res.send(200, transactions);
           return false;
         })

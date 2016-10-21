@@ -1,4 +1,5 @@
 const config = require('../config.js');
+
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'saleGet';
 
@@ -44,26 +45,26 @@ const ROUTE_NAME = 'saleGet';
  *
  * @apiSuccessExample {json} Success:
  *   HTTP/1.1 200 OK
- * 		{
- * 			"meta": {
- * 				"id": "request-id",
- * 				"page": 10,
- * 				"pages": 10
- * 			},
- * 			"data": [{
- * 				"type": "sale",
- * 				"id": "PAY-1237198789d89",
- * 				"attributes": {
- * 					...
- * 				},
- * 				"links": {
- * 					"self": "https://localhost:443/api/payments/sales?cursor=81&limit=10"
- * 				}
- * 			}],
- * 			"links": {
- * 				"self": "https://localhost:443/api/payments/sales?cursor=91&limit=10"
- * 			}
- * 		}
+ *     {
+ *       "meta": {
+ *         "id": "request-id",
+ *         "page": 10,
+ *         "pages": 10
+ *       },
+ *       "data": [{
+ *         "type": "sale",
+ *         "id": "PAY-1237198789d89",
+ *         "attributes": {
+ *           ...
+ *         },
+ *         "links": {
+ *           "self": "https://localhost:443/api/payments/sales?cursor=81&limit=10"
+ *         }
+ *       }],
+ *       "links": {
+ *         "self": "https://localhost:443/api/payments/sales?cursor=91&limit=10"
+ *       }
+ *     }
  */
 exports.get = {
   path: '/sales/:id',
@@ -81,7 +82,7 @@ exports.get = {
 
       return req.amqp
         .publishAndWait(getRoute(ROUTE_NAME), message, { timeout: getTimeout(ROUTE_NAME) })
-        .then(sale => {
+        .then((sale) => {
           res.send(config.models.Sale.transform(sale, true, isAdmin));
           return false;
         })

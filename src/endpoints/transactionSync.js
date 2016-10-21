@@ -1,6 +1,7 @@
 const config = require('../config.js');
-const { getRoute } = config;
 const validator = require('../validator.js');
+
+const { getRoute } = config;
 const ROUTE_NAME = 'transactionSync';
 
 /**
@@ -41,7 +42,7 @@ exports.post = {
   handlers: {
     '1.0.0': function transactionsSync(req, res, next) {
       return validator.validate('transaction.sync', req.body)
-        .then(body => {
+        .then((body) => {
           const attributes = body.data;
           const message = {
             id: attributes.id,

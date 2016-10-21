@@ -1,6 +1,7 @@
 const config = require('../config.js');
-const { getRoute } = config;
 const validator = require('../validator.js');
+
+const { getRoute } = config;
 const ROUTE_NAME = 'saleSync';
 
 /**
@@ -38,7 +39,7 @@ exports.post = {
   handlers: {
     '1.0.0': function saleSync(req, res, next) {
       return validator.validate('sale.sync', req.body)
-        .then(body => {
+        .then((body) => {
           const nextId = body.data.attributes.next_id;
           const message = nextId ? { next_id: nextId } : {};
 

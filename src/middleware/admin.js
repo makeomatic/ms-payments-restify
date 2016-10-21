@@ -12,5 +12,5 @@ module.exports = function allowOnlyAdmin(req, res, next) {
     return next(new Errors.HttpStatusError(403, 'access denied'));
   }
 
-  next();
+  return next();
 };

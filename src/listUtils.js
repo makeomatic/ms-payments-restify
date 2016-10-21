@@ -1,22 +1,20 @@
 const Promise = require('bluebird');
 const mixins = require('mm-lodash');
 const ld = require('lodash').runInContext();
-ld.mixin(mixins);
-
 const Errors = require('common-errors');
 const validator = require('./validator.js');
-
 const config = require('./config.js');
-const { getRoute, getTimeout } = config;
-
 const { stringify: qs } = require('querystring');
 
+ld.mixin(mixins);
+
+const { getRoute, getTimeout } = config;
 const USER_PROTECTED_ROUTES = ['agreementList', 'saleList', 'transactionList', 'transactionCommon'];
 
 function createRequest(req, ROUTE_NAME) {
   return Promise.try(function verifyRights() {
     const { order, type, filter, offset, limit, sortBy } = req.query;
-    const parsedFilter = filter && JSON.parse(decodeURIComponent(filter)) || {};
+    const parsedFilter = (filter && JSON.parse(decodeURIComponent(filter))) || {};
     let { owner } = req.query;
 
     if (!req.user || !req.user.isAdmin()) {
@@ -34,12 +32,12 @@ function createRequest(req, ROUTE_NAME) {
 
     return ld.compactObject({
       order: (order || 'DESC').toUpperCase(),
-      offset: offset && +offset || undefined,
-      limit: limit && +limit || 10,
+      offset: (offset && +offset) || undefined,
+      limit: (limit && +limit) || 10,
       filter: parsedFilter,
       type: type || undefined,
       owner: owner || undefined,
-      criteria: sortBy && decodeURIComponent(sortBy) || undefined,
+      criteria: (sortBy && decodeURIComponent(sortBy)) || undefined,
     });
   })
   .catch(function validationError(err) {
@@ -107,7 +105,8 @@ function createResponse(res, subroute, type, idField, isAdmin) {
       res.links.next = `${base}?${qs(nextQS)}`;
     }
 
-    const transform = typeof type === 'function' ? modelTransform(type, isAdmin) : dataTransform(type, idField); // eslint-disable-line max-len
+    // eslint-disable-next-line max-len
+    const transform = typeof type === 'function' ? modelTransform(type, isAdmin) : dataTransform(type, idField);
     return Promise.resolve(answer.items.map(transform));
   };
 }

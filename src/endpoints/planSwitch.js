@@ -2,9 +2,10 @@ const Promise = require('bluebird');
 const validator = require('../validator.js');
 const Errors = require('common-errors');
 const config = require('../config.js');
-const { getRoute, getTimeout } = config;
 const moment = require('moment');
 const agreementCreate = require('./agreementCreate.js').create;
+
+const { getRoute, getTimeout } = config;
 const getMetadataPath = `${config.users.prefix}.${config.users.postfix.getMetadata}`;
 
 function getCurrentAgreement(user, amqp) {
@@ -16,7 +17,7 @@ function getCurrentAgreement(user, amqp) {
 
   return amqp.publishAndWait(getMetadataPath, getRequest, { timeout: 5000 })
     .get(audience)
-    .then(metadata => {
+    .then((metadata) => {
       if (!metadata.agreement) {
         throw new Errors.NotSupportedError('Operation is not available on users not having agreement data.');
       }
@@ -97,7 +98,7 @@ const execute = Promise.coroutine(function* generateSwitch(req) {
 
   // and just write free plan metadata to user
   // cancel agreement when switching to free
-  yield cancelAgreement(currentAgreementId, req.amqp);
+  yield cancelAgreement(user, req.amqp);
   const freePlanData = yield getFreePlanData(req.amqp);
   yield saveFreeMetadata(user, freePlanData.price, req.amqp);
 
@@ -178,7 +179,7 @@ exports.post = {
   middleware: ['auth'],
   handlers: {
     '1.0.0': function planSwitch(req, res, next) {
-      return execute(req).then(response => {
+      return execute(req).then((response) => {
         res.send(201, response);
       }).asCallback(next);
     },

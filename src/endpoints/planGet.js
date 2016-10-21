@@ -1,4 +1,5 @@
 const config = require('../config.js');
+
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'planGet';
 
@@ -38,7 +39,7 @@ exports.get = {
     '1.0.0': function getPlan(req, res, next) {
       return req.amqp
         .publishAndWait(getRoute(ROUTE_NAME), req.params.id, { timeout: getTimeout(ROUTE_NAME) })
-        .then(plan => {
+        .then((plan) => {
           res.send(config.models.Plan.transform(plan, true));
           return false;
         })

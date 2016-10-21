@@ -1,7 +1,8 @@
 const config = require('../config.js');
+const Errors = require('common-errors');
+
 const { getRoute, getTimeout } = config;
 const ROUTE_NAME = 'agreementExecute';
-const Errors = require('common-errors');
 
 /**
  * @param  {AMQPTransport} amqp
