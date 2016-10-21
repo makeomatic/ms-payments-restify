@@ -2,7 +2,6 @@ const Promise = require('bluebird');
 const validator = require('../validator.js');
 const Errors = require('common-errors');
 const config = require('../config.js');
-const moment = require('moment');
 const agreementCreate = require('./agreementCreate.js').create;
 
 const { getRoute, getTimeout } = config;
@@ -25,10 +24,10 @@ function getCurrentAgreement(user, amqp) {
     });
 }
 
-function cancelAgreement(id, amqp) {
+function cancelAgreement(owner, amqp) {
   const path = getRoute('agreementState');
   const message = {
-    id,
+    owner,
     state: 'cancel',
     note: 'Cancelling agreement by user request to switch to free plan',
   };
@@ -47,28 +46,6 @@ function getFreePlanData(amqp) {
       plan,
       price: plan.subs[0].price,
     }));
-}
-
-function saveFreeMetadata(user, price, amqp) {
-  const period = 'month';
-  const nextCycle = moment().add(1, period).valueOf();
-
-  const updateRequest = {
-    username: user,
-    audience: config.users.audience,
-    metadata: {
-      $set: {
-        nextCycle,
-        agreement: 'free',
-        plan: 'free',
-        modelPrice: price,
-        subscriptionPrice: '0.00',
-        subscriptionInterval: 'month',
-      },
-    },
-  };
-
-  return amqp.publishAndWait(getMetadataPath, updateRequest, { timeout: 5000 });
 }
 
 const execute = Promise.coroutine(function* generateSwitch(req) {
@@ -100,7 +77,6 @@ const execute = Promise.coroutine(function* generateSwitch(req) {
   // cancel agreement when switching to free
   yield cancelAgreement(user, req.amqp);
   const freePlanData = yield getFreePlanData(req.amqp);
-  yield saveFreeMetadata(user, freePlanData.price, req.amqp);
 
   // no need to approve free plan
   return {
