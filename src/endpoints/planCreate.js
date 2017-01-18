@@ -56,10 +56,16 @@ exports.formSubscriptionObject = formSubscriptionObject;
  * @apiParam (Params) {String}  data.attributes.subscriptions.monthly.price Subscription price.
  * @apiParam (Params) {Number}  data.attributes.subscriptions.monthly.models Amount of models for this subscription.
  * @apiParam (Params) {Number}  data.attributes.subscriptions.monthly.modelPrice How much additional model cost.
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.monthly.embeddings Amount of 3D images for embedding.
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.monthly.storage Available disk storage for 3D models(in Gb).
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.monthly.traffic Traffic (in Gb)
  * @apiParam (Params) {String}  data.attributes.subscriptions.yearly Yearly options.
  * @apiParam (Params) {Object}  data.attributes.subscriptions.yearly.price Subscription price.
  * @apiParam (Params) {Number}  data.attributes.subscriptions.yearly.models Amount of models for this subscription.
  * @apiParam (Params) {Number}  data.attributes.subscriptions.yearly.modelPrice How much additional model cost.
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.yearly.embeddings Amount of 3D images for embedding.
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.yearly.storage Available disk storage for 3D models(in Gb).
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.yearly.traffic Traffic(in Gb).
  *
  * @apiExample {curl} Example usage:
  *   curl -i -X POST
@@ -74,12 +80,18 @@ exports.formSubscriptionObject = formSubscriptionObject;
  *         "monthly": {
  *           "price": 9.99,
  *           "models": 100,
- *           "modelPrice": 0.09
+ *           "modelPrice": 0.09,
+ *           "embeddings": 30,
+ *           "traffic": 5.5,
+ *           "storage": 20
  *         },
  *         "yearly": {
  *           "price": 99.99,
  *           "models": 1500,
- *           "modelPrice": 0.01
+ *           "modelPrice": 0.01,
+ *           "embeddings": 400,
+ *           "traffic": 70,
+ *           "storage": 20
  *         }
  *       }
  *     } }'
@@ -118,10 +130,16 @@ exports.post = {
             subscriptions: [{
               models: subscriptions.monthly.models,
               price: subscriptions.monthly.modelPrice,
+              traffic: subscriptions.monthly.traffic,
+              storage: subscriptions.monthly.storage,
+              embeddings: subscriptions.monthly.embeddings,
               name: 'month',
             }, {
               models: subscriptions.yearly.models,
               price: subscriptions.yearly.modelPrice,
+              traffic: subscriptions.yearly.traffic,
+              storage: subscriptions.yearly.storage,
+              embeddings: subscriptions.yearly.embeddings,
               name: 'year',
             }],
           };

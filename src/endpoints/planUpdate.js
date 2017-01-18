@@ -28,9 +28,15 @@ const ROUTE_NAME = 'planUpdate';
  * @apiParam (Params) {Object}  data.attributes.subscriptions.monthly Monthly options.
  * @apiParam (Params) {Number}  data.attributes.subscriptions.monthly.models Amount of models for this subscription.
  * @apiParam (Params) {Number}  data.attributes.subscriptions.monthly.modelPrice How much additional model cost.
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.monthly.embeddings Amount of 3D images for embedding.
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.monthly.storage Available disk storage for 3D models(in Gb).
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.monthly.traffic Traffic (in Gb)
  * @apiParam (Params) {String}  data.attributes.subscriptions.yearly Yearly options.
  * @apiParam (Params) {Number}  data.attributes.subscriptions.yearly.models Amount of models for this subscription.
  * @apiParam (Params) {Number}  data.attributes.subscriptions.yearly.modelPrice How much additional model cost.
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.yearly.embeddings Amount of 3D images for embedding.
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.yearly.storage Available disk storage for 3D models(in Gb).
+ * @apiParam (Params) {Number}  data.attributes.subscriptions.yearly.traffic Traffic(in Gb).
  *
  * @apiSuccess (200) {object} plan Plan object as returned from PayPal with additional fields like id.
  *
@@ -47,11 +53,17 @@ const ROUTE_NAME = 'planUpdate';
  *       "subscriptions": {
  *         "monthly": {
  *           "models": 100,
- *           "modelPrice": 0.09
+ *           "modelPrice": 0.09,
+ *           "embeddings": 30,
+ *           "traffic": 5.5,
+ *           "storage": 20
  *         },
  *         "yearly": {
  *           "models": 1500,
- *           "modelPrice": 0.01
+ *           "modelPrice": 0.01,
+ *           "embeddings": 400,
+ *           "traffic": 70,
+ *           "storage": 20
  *         }
  *       }
  *     } }'
